@@ -1,5 +1,3 @@
-import api from "./Api.js";
-
 export class Card {
   constructor(
     name,

@@ -5,7 +5,7 @@ import { PopupWithConfirmation } from "../components/PopupWithConfirmation.js";
 import { UserInfo } from "../components/UserInfo.js";
 import { Card } from "../components/Card.js";
 
-import api from "../components/Api.js";
+import * as api from "../utils/api";
 
 import {
   handleProfileFormSubmit,

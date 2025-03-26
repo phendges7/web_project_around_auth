@@ -1,0 +1,90 @@
+.login {
+  border: 2px solid #02ff00;
+  flex-direction: column;
+  padding: 36px;
+  width: 100%;
+  max-width: 350px;
+}
+
+.login__container {
+  display: flex;
+  justify-content: center;
+}
+
+.login__welcome {
+  margin-bottom: 54px;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 29px;
+  text-align: center;
+}
+
+.login__error {
+  color: #ff0000;
+}
+
+.login__form {
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  margin: 0 auto;
+  width: 80%;
+  margin-top: 12px;
+}
+
+.login__form input {
+  background-color: black;
+  border-bottom: 2px solid #cccccc;
+  margin-bottom: 0;
+}
+
+.login__form label {
+  margin-top: 12px;
+  margin-bottom: 6px;
+  border: none;
+}
+
+.login__button {
+  margin-top: 20px;
+  width: 100%;
+  height: 50px;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
+  text-align: center;
+  background-color: #fff;
+  color: #000;
+  cursor: pointer;
+}
+
+.login__signup {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.login__signup p {
+  margin-right: 12px;
+}
+
+.signup__link {
+  color: white;
+}
+
+.login__button-container {
+  display: flex;
+  justify-content: center;
+}
+
+.login__link {
+  color: #02ff00;
+  text-align: center;
+  margin-top: 32px;
+  width: 20%;
+  background-color: black;
+  border: none;
+}
