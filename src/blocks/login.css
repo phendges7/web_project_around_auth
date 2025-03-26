@@ -1,14 +1,14 @@
 .login {
-  border: 2px solid #02ff00;
-  flex-direction: column;
-  padding: 36px;
-  width: 100%;
-  max-width: 350px;
+  display: flex;
+  justify-content: center;
 }
 
 .login__container {
-  display: flex;
-  justify-content: center;
+  border: 2px solid #02ff00;
+  padding: 36px;
+  width: 100%;
+  max-width: 360px;
+  align-self: center;
 }
 
 .login__welcome {
@@ -38,12 +38,18 @@
   background-color: black;
   border-bottom: 2px solid #cccccc;
   margin-bottom: 0;
+  color: #fff;
 }
 
 .login__form label {
   margin-top: 12px;
   margin-bottom: 6px;
   border: none;
+}
+
+.login__button-container {
+  display: flex;
+  justify-content: center;
 }
 
 .login__button {
@@ -68,7 +74,7 @@
 }
 
 .login__signup p {
-  margin-right: 12px;
+  margin-right: 15px;
 }
 
 .signup__link {
@@ -80,11 +86,12 @@
   justify-content: center;
 }
 
-.login__link {
-  color: #02ff00;
-  text-align: center;
-  margin-top: 32px;
-  width: 20%;
-  background-color: black;
+.toggle-password {
+  align-self: flex-end;
+  transform: translateY(-85%);
+  background: none;
   border: none;
+  cursor: pointer;
+  padding: 5px;
+  color: #666;
 }

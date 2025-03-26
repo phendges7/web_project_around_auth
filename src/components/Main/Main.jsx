@@ -20,7 +20,7 @@ export default function Main({
   const { currentUser } = useContext(CurrentUserContext);
 
   return (
-    <main className="content">
+    <>
       <div className="profile">
         <div className="profile__picture-container">
           <img
@@ -79,6 +79,6 @@ export default function Main({
             />
           ))}
       </div>
-    </main>
+    </>
   );
 }

@@ -1,19 +1,13 @@
-import { Section } from "../components/Section.js";
-import { PopupWithForm } from "../components/PopupWithForm.js";
-import { PopupWithImage } from "../components/PopupWithImage.js";
-import { PopupWithConfirmation } from "../components/PopupWithConfirmation.js";
-import { UserInfo } from "../components/UserInfo.js";
-import { Card } from "../components/Card.js";
+import { Section } from "../components/alltherest/Section.js";
+//import { PopupWithForm } from "../components/alltherest/PopupWithForm.js";
+//import { PopupWithImage } from "../components/alltherest/PopupWithImage.js";
+//import { PopupWithConfirmation } from "../components/alltherest/PopupWithConfirmation.js";
+import { UserInfo } from "../components/alltherest/UserInfo.js";
+import { Card } from "../components/alltherest/Card.js";
 
 import * as api from "../utils/api";
 
-import {
-  handleProfileFormSubmit,
-  handleCardFormSubmit,
-  handleDeleteCard,
-  handleAvatarFormSubmit,
-  handleError,
-} from "../scripts/utils.js";
+import { handleError, handleProfileFormSubmit } from "../utils/handlers.js";
 
 //CONTAINERS UTEIS
 const pageContainer = document.querySelector(".page");
@@ -86,7 +80,7 @@ function loadPageData() {
     });
 }
 
-/***********************************/
+/***********************************
 // Instancia popup para editar PERFIL
 const popupProfileForm = new PopupWithForm(
   "#popupProfile",
@@ -120,7 +114,7 @@ popupDeleteCard.setEventListeners();
 const popupImage = new PopupWithImage(".popupImage");
 popupImage.setEventListeners();
 
-/***********************************/
+/***********************************
 //CARDS
 // Manipula clique no card
 export const handleCardClick = (name, link) => {
@@ -132,7 +126,7 @@ export const handleDeleteClick = (event, cardId) => {
   popupDeleteCard.open(event, cardId);
 };
 
-/***********************************/
+/***********************************
 //EVENT LISTENERS PARA POPUPS
 const editProfileButton = document.querySelector(".profile__edit-button");
 editProfileButton.addEventListener("click", () => {

@@ -1,7 +1,5 @@
 import { Link } from "react-router-dom";
 import { useState } from "react";
-import Logo from "../../images/headerLogo.svg";
-import "../../blocks/Register.css";
 
 const Register = ({ handleRegistration }) => {
   const [data, setData] = useState({
@@ -23,29 +21,30 @@ const Register = ({ handleRegistration }) => {
   };
 
   return (
-    <div className="register">
-      <Logo title={"Around the U.S."} />
-      <p className="register__welcome">Por favor, registre-se</p>
+    <div className="register__container">
+      <p className="register__welcome">Inscrever-se</p>
       <form className="register__form" onSubmit={handleSubmit}>
-        <label htmlFor="email">E-mail:</label>
+        <label htmlFor="email"></label>
         <input
           id="email"
           name="email"
           type="email"
+          placeholder="E-mail"
           value={data.email}
           onChange={handleChange}
         />
-        <label htmlFor="password">Senha:</label>
+        <label htmlFor="password"></label>
         <input
           id="password"
           name="password"
           type="password"
+          placeholder="Senha"
           value={data.password}
           onChange={handleChange}
         />
         <div className="register__button-container">
-          <button type="submit" className="register__link">
-            Inscreva-se aqui
+          <button type="submit" className="register__button">
+            Inscreva-se
           </button>
         </div>
       </form>

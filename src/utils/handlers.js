@@ -1,10 +1,10 @@
 import { renderCard } from "../page/index.js";
-import { UserInfo } from "../components/UserInfo.js";
-import api from "../components/Api.js";
+import { UserInfo } from "../components/alltherest/UserInfo.js";
+import * as api from "../utils/api";
 
-// FUNCTION - MANIPULAR SUBMIT DE PERFIL
 const userInfo = new UserInfo(".profile__name", ".profile__description");
 
+// FUNCTION - MANIPULAR SUBMIT DE PERFIL
 export function handleProfileFormSubmit(params) {
   const { formData } = params;
 
@@ -110,6 +110,7 @@ export function handleDeleteCard(event, cardId) {
   }
 }
 
+// FUNCTION - MANIPULAR ERROS
 export function handleError(err) {
   switch (err.type) {
     case "network":
@@ -124,3 +125,46 @@ export function handleError(err) {
       return err.message || "Ocorreu um erro inesperado. Tente novamente.";
   }
 }
+
+// FUNCTION - MANIPULAR LIKE
+async function handleCardLike(card) {
+  // Verificar mais uma vez se esse cartão já foi curtido
+  const isLiked = card.isLiked;
+
+  // Obter os dados do cartão atualizados
+  await api
+    .changeLikeCardStatus(card._id, !isLiked)
+    .then((newCard) => {
+      setCards((state) =>
+        state.map((currentCard) =>
+          currentCard._id === card._id ? newCard : currentCard
+        )
+      );
+    })
+    .catch((error) => console.error(error));
+}
+
+// FUNCTION - MANIPULAR DELETAR CARD
+async function handleCardDelete(card) {
+  await api
+    .deleteCard(card._id)
+    .then(() => {
+      setCards((state) =>
+        state.filter((currentCard) => currentCard._id !== card._id)
+      );
+    })
+    .catch((error) => console.error(error));
+}
+
+//------------- POPUP -------------//
+// FUNCTION - MANIPULAR ABRIR POPUP
+const handleOpenPopup = (popup) => {
+  setPopup(popup);
+  document.querySelector(".overlay")?.classList.add("visible");
+};
+
+// FUNCTION - MANIPULAR FECHAR POPUP
+const handleClosePopup = () => {
+  setPopup(null);
+  document.querySelector(".overlay")?.classList.remove("visible");
+};

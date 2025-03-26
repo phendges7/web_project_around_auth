@@ -12,6 +12,12 @@ import { getUserInfo } from "../utils/api";
 import { setToken, getToken } from "../utils/token";
 import ProtectedRoute from "./alltherest/ProtectedRoute";
 
+import {
+  handleCardFormSubmit,
+  handleProfileFormSubmit,
+  handleAvatarFormSubmit,
+} from "../utils/handlers";
+
 import Register from "./alltherest/Register";
 import Login from "../components/alltherest/Login";
 //import Main from "./alltherest/Main";
@@ -35,9 +41,14 @@ function App() {
   const handleRegistration = ({ email, password }) => {
     auth
       .register({ email, password })
-      .then(() => {
-        setIsLoggedIn(true);
-        console.log("Usuário registrado com sucesso!"), navigate("/login");
+      .then((data) => {
+        console.group("Debug de Registro");
+        console.log("Token:", data.token);
+        console.log("Dados completos:", data);
+        console.groupEnd();
+
+        setIsLoggedIn(false);
+        navigate("/login");
       })
       .catch((error) => {
         console.error("Erro ao registrar o usuário: ", error);
@@ -46,16 +57,26 @@ function App() {
 
   const handleLogin = ({ email, password }) => {
     auth
-      .login({ email, password })
-      .then((data) => {
-        console.log("Usuário logado com sucesso!", data);
-        if (data.jwt) {
-          setToken(data.jwt);
-          setIsLoggedIn(true);
-          setUserData(data.user);
-          const redirectPath = location.state?.from || "/main";
-          navigate(redirectPath);
-        }
+      .authorize(email, password) // 1. Remove a desestruturação aqui
+      .then((token) => {
+        // 2. Recebe diretamente o token
+        console.group("Debug de Login");
+        console.log("Token recebido:", token);
+        setToken(token);
+        setIsLoggedIn(true);
+
+        // 3. Adiciona chamada para obter dados do usuário
+        api
+          .getUserInfo(token) // Supondo que existe esta função na sua API
+          .then((userData) => {
+            console.log("Dados do usuário:", userData);
+            setUserData(userData); // 5. Seta os dados reais do usuário
+            navigate(location.state?.from || "/main");
+          })
+          .catch((userError) => {
+            console.error("Erro ao obter dados do usuário:", userError);
+          });
+        console.groupEnd();
       })
       .catch((error) => {
         console.error("Erro ao fazer login: ", error);
@@ -87,60 +108,6 @@ function App() {
       .catch((err) => console.error("Erro ao buscar os cartões:", err));
   }, []);
 
-  //manipulador de curtidas
-  async function handleCardLike(card) {
-    // Verificar mais uma vez se esse cartão já foi curtido
-    const isLiked = card.isLiked;
-
-    // Obter os dados do cartão atualizados
-    await api
-      .changeLikeCardStatus(card._id, !isLiked)
-      .then((newCard) => {
-        setCards((state) =>
-          state.map((currentCard) =>
-            currentCard._id === card._id ? newCard : currentCard
-          )
-        );
-      })
-      .catch((error) => console.error(error));
-  }
-
-  //manipulador deletar cards
-  async function handleCardDelete(card) {
-    await api
-      .deleteCard(card._id)
-      .then(() => {
-        setCards((state) =>
-          state.filter((currentCard) => currentCard._id !== card._id)
-        );
-      })
-      .catch((error) => console.error(error));
-  }
-
-  //manipulador de adicionar cards
-  const handleAddPlaceSubmit = (newCard) => {
-    api
-      .addNewCard(newCard)
-      .then((createdCard) => {
-        setCards([createdCard, ...cards]);
-        handleClosePopup(); // Fecha o popup depois de adicionar o card
-      })
-      .catch((error) => console.error(error));
-  };
-
-  //------------- POPUP -------------//
-  //manipulador de abrir popup
-  const handleOpenPopup = (popup) => {
-    setPopup(popup);
-    document.querySelector(".overlay")?.classList.add("visible");
-  };
-
-  //manipulador de fechar popup
-  const handleClosePopup = () => {
-    setPopup(null);
-    document.querySelector(".overlay")?.classList.remove("visible");
-  };
-
   //------------- PROFILE -------------//
   //carregar dados do usuário
   useEffect(() => {
@@ -151,41 +118,15 @@ function App() {
     })();
   }, []);
 
-  //manipulador de atualizar usuário
-  const handleUpdateUser = (data) => {
-    (async () => {
-      await api
-        .updateUserInfo(data)
-        .then((newData) => {
-          setCurrentUser(newData);
-          handleClosePopup();
-        })
-        .catch((error) => console.error(error));
-    })();
-  };
-
-  //manipulador de atualizar avatar
-  const handleUpdateAvatar = (data) => {
-    (async () => {
-      await api
-        .updateAvatar(data)
-        .then((newData) => {
-          setCurrentUser(newData);
-          handleClosePopup();
-        })
-        .catch((error) => console.error(error));
-    })();
-  };
-
   //------------- RENDER -------------//
   return (
-    <AppContext.Provider value={{ isLoggedIn }}>
+    <AppContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
       <CurrentUserContext.Provider
-        value={(userData, handleUpdateUser, handleUpdateAvatar)}
+        value={(userData, handleProfileFormSubmit, handleAvatarFormSubmit)}
       >
         <CardContext.Provider
           value={{
-            handleAddPlaceSubmit,
+            handleCardFormSubmit,
           }}
         >
           <div className="overlay"></div>
@@ -217,7 +158,7 @@ function App() {
                   path="/login"
                   element={
                     <ProtectedRoute isLoggedIn={isLoggedIn} anonymous>
-                      <div className="login__container">
+                      <div className="login">
                         <Login handleLogin={handleLogin} />
                       </div>
                     </ProtectedRoute>
@@ -227,9 +168,7 @@ function App() {
                   path="/register"
                   element={
                     <ProtectedRoute isLoggedIn={isLoggedIn} anonymous>
-                      <div className="registerContainer">
-                        <Register handleRegistration={handleRegistration} />
-                      </div>
+                      <Register handleRegistration={handleRegistration} />
                     </ProtectedRoute>
                   }
                 />

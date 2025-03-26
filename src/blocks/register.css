@@ -1,14 +1,24 @@
 .register {
-  border: 2px solid #02ff00;
   display: flex;
-  flex-direction: column;
-  padding: 36px;
   justify-content: center;
-  width: 50%;
+}
+
+.register__container {
+  border: 2px solid #02ff00;
+  padding: 36px;
+  width: 100%;
+  max-width: 360px;
+  align-self: center;
 }
 
 .register__welcome {
-  margin-top: 32px;
+  margin-bottom: 54px;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 900;
+  font-size: 24px;
+  line-height: 29px;
+  text-align: center;
 }
 
 .register__error {
@@ -26,8 +36,8 @@
 
 .register__form input {
   background-color: #000000;
-  border: 2px solid #02ff00;
-  color: #02ff00;
+  border: 2px solid #ccc;
+  color: #fff;
 }
 
 .register__form label {
@@ -40,24 +50,29 @@
   justify-content: center;
 }
 
-.register__link {
-  color: #02ff00;
+.register__button {
+  margin-top: 20px;
+  width: 100%;
+  height: 50px;
+  font-family: "Inter";
+  font-style: normal;
+  font-weight: 400;
+  font-size: 18px;
+  line-height: 22px;
   text-align: center;
-  margin-top: 32px;
-  width: 20%;
-  background-color: black;
-  border: none;
+  background-color: #fff;
+  color: #000;
+  cursor: pointer;
 }
 
 .register__signin {
   display: flex;
   align-items: center;
   justify-content: center;
-  margin-top: 32px;
 }
 
 .register__signin p {
-  margin-right: 12px;
+  margin-right: 15px;
 }
 
 .register__login-link {

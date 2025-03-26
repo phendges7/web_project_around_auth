@@ -1,5 +1,9 @@
-import React from "react";
+// src/contexts/AppContext.js
+import { createContext } from "react";
 
-const AppContext = React.createContext();
+const AppContext = createContext({
+  isLoggedIn: false,
+  setIsLoggedIn: () => {}, // Função vazia como valor padrão
+});
 
 export default AppContext;
