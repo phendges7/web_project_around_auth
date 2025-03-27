@@ -1,9 +1,9 @@
-import headerLogo from "../../images/headerLogo.svg";
+import headerLogo from "../images/headerLogo.svg";
 import { useContext } from "react";
-import AppContext from "../../contexts/AppContext";
-import CurrentUserContext from "../../contexts/CurrentUserContext";
+import AppContext from "../contexts/AppContext";
+import CurrentUserContext from "../contexts/CurrentUserContext";
 import { useLocation, useNavigate } from "react-router-dom";
-import { removeToken } from "../../utils/token";
+import { removeToken } from "../utils/token";
 
 const Header = () => {
   const { isLoggedIn, setIsLoggedIn } = useContext(AppContext);

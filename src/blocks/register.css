@@ -1,8 +1,8 @@
 .register__container {
   display: flex;
   flex-direction: column;
-  justify-content: space-between;
-  min-height: calc(100vh - 300px);
+  justify-content: flex-start;
+  min-height: 63vh;
   width: 358px;
   margin: 0 auto;
 }
@@ -21,6 +21,7 @@
 .register__form {
   display: flex;
   flex-direction: column;
+  flex-grow: 1;
   justify-content: center;
   margin: 0 auto;
   width: 80%;
@@ -37,11 +38,12 @@
 .register__form label {
   margin-top: 12px;
   margin-bottom: 6px;
+  border: none;
 }
 
 .register__button-container {
-  display: flex;
-  justify-content: center;
+  margin-top: auto;
+  padding-bottom: 20px;
 }
 
 .register__button {
@@ -58,6 +60,11 @@
   background-color: #fff;
   color: #000;
   cursor: pointer;
+}
+
+.register__button:hover {
+  opacity: 0.8;
+  transition: background 0.3s;
 }
 
 .register__signin {

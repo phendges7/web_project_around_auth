@@ -14,9 +14,9 @@ import { handleCardFormSubmit } from "../utils/handlers";
 
 import Register from "./Register";
 import Login from "../components/Login";
-import Header from "./Header/Header";
+import Header from "./Header";
 import Main from "./Main/Main";
-import Footer from "./Footer/Footer";
+import Footer from "./Footer";
 import InfoTooltip from "./InfoTooltip";
 
 import CurrentUserContext from "../contexts/CurrentUserContext";
@@ -95,6 +95,7 @@ function App() {
             id: userData.data._id,
           });
           setIsLoggedIn(true);
+          navigate(location.state?.from || "/"); // Redireciona para a página anterior ou para a raiz
         })
         .catch(() => {
           removeToken();

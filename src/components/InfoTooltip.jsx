@@ -1,11 +1,12 @@
 import Popup from "./Main/components/Popup/Popup.jsx";
 import successIcon from "../images/successIcon.png";
 import failIcon from "../images/failIcon.png";
+import { useEffect } from "react";
 
 export default function InfoTooltip({ isOpen, onClose, isSuccess }) {
   const messages = {
     success: {
-      text: "Cadastro realizado\ncom sucesso!",
+      text: "Cadastro realizado com sucesso!\nAgora você pode fazer login.",
       icon: successIcon,
       altText: "Ícone de sucesso",
     },
@@ -17,6 +18,19 @@ export default function InfoTooltip({ isOpen, onClose, isSuccess }) {
   };
 
   const { text, icon, altText } = isSuccess ? messages.success : messages.error;
+
+  useEffect(() => {
+    let timer;
+    // Fecha popup depois de 5 segundos apenas no sucesso
+    if (isOpen && isSuccess) {
+      timer = setTimeout(() => {
+        onClose();
+      }, 5000);
+    }
+
+    // Limpa o timer se o componente for desmontado ou se isOpen mudar
+    return () => clearTimeout(timer);
+  }, [isOpen, isSuccess, onClose]);
 
   return (
     <Popup isOpen={isOpen} onClose={onClose} title={InfoTooltip}>

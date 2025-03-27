@@ -64,6 +64,7 @@
 
 .login__button:hover {
   opacity: 0.8;
+  transition: background 0.3s;
 }
 
 .login__signup {

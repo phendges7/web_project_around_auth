@@ -18,6 +18,7 @@
 /* Estilos básicos do popup */
 .popup {
   display: none;
+  transition: opacity 5s ease, visibility 5s ease;
 }
 
 .popup__content {

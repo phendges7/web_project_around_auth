@@ -1,11 +1,14 @@
 import { Link } from "react-router-dom";
 import { useEffect, useState } from "react";
+import { Eye, EyeOff } from "react-feather";
 
 const Register = ({ onRegister }) => {
   const [data, setData] = useState({
     email: "",
     password: "",
   });
+
+  const [showPassword, setShowPassword] = useState(false);
 
   // Limpa INPUTS quando o componente é montado
   useEffect(() => {
@@ -45,11 +48,18 @@ const Register = ({ onRegister }) => {
         <input
           id="password"
           name="password"
-          type="password"
           placeholder="Senha"
           value={data.password}
+          type={showPassword ? "text" : "password"}
           onChange={handleChange}
         />
+        <button
+          type="button"
+          className="toggle-password"
+          onClick={() => setShowPassword(!showPassword)}
+        >
+          {showPassword ? <EyeOff size={18} /> : <Eye size={18} />}
+        </button>
         <div className="register__button-container">
           <button type="submit" className="register__button">
             Inscreva-se

@@ -3,6 +3,7 @@ export const BASE_URL = "https://around-api.pt-br.tripleten-services.com/v1";
 const DEFAULT_HEADERS = {
   Accept: "application/json",
   "Content-Type": "application/json",
+  Authorization: `8308cb53-bc91-42d1-afda-3dc42a0181bf`,
 };
 
 // FUNCTION - tratar respostas
