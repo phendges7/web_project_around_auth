@@ -16,10 +16,23 @@
   margin: 45px 0 41px;
 }
 
+.header__navbar {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 45px 0 41px;
+}
+
+.header__current-user-email {
+  margin-right: 56px;
+  color: white;
+  font-size: 14px;
+  font-weight: 500;
+}
+
 .header__auth-button {
   color: #fff;
   font-size: 18px;
-  align-self: center;
   border: none;
   background-color: transparent;
   cursor: pointer;

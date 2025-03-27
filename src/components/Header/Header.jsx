@@ -1,15 +1,19 @@
 import headerLogo from "../../images/headerLogo.svg";
 import { useContext } from "react";
 import AppContext from "../../contexts/AppContext";
-import { Link, useLocation, useNavigate } from "react-router-dom";
+import CurrentUserContext from "../../contexts/CurrentUserContext";
+import { useLocation, useNavigate } from "react-router-dom";
+import { removeToken } from "../../utils/token";
 
-function Header() {
+const Header = () => {
   const { isLoggedIn, setIsLoggedIn } = useContext(AppContext);
+  const { currentUser } = useContext(CurrentUserContext);
+
   const location = useLocation();
   const navigate = useNavigate();
 
-  const handleLogout = () => {
-    localStorage.removeItem("jwt");
+  const onSignout = () => {
+    removeToken();
     setIsLoggedIn(false);
     navigate("/login");
   };
@@ -18,7 +22,7 @@ function Header() {
     if (isLoggedIn) {
       return {
         text: "Sair",
-        action: handleLogout,
+        action: onSignout,
       };
     }
     if (location.pathname === "/register") {
@@ -27,7 +31,6 @@ function Header() {
         action: () => navigate("/login"),
       };
     }
-
     return {
       text: "Entrar",
       action: () => navigate("/login"),
@@ -43,11 +46,14 @@ function Header() {
         alt="Around the U.S logo"
         className="logo header__logo"
       />
-      <button onClick={authButton.action} className="header__auth-button">
-        {authButton.text}
-      </button>
+      <div className="header__navbar">
+        <p className="header__current-user-email">{currentUser?.email}</p>
+        <button onClick={authButton.action} className="header__auth-button">
+          {authButton.text}
+        </button>
+      </div>
     </header>
   );
-}
+};
 
 export default Header;

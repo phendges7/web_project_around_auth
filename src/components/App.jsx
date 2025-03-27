@@ -7,123 +7,113 @@ import {
 } from "react-router-dom";
 import { useEffect, useState } from "react";
 import * as auth from "../utils/auth";
-import * as api from "../utils/api";
-import { getUserInfo } from "../utils/api";
-import { setToken, getToken } from "../utils/token";
-import ProtectedRoute from "./alltherest/ProtectedRoute";
+import { setToken, getToken, removeToken } from "../utils/token";
+import ProtectedRoute from "./ProtectedRoute";
 
-import {
-  handleCardFormSubmit,
-  handleProfileFormSubmit,
-  handleAvatarFormSubmit,
-} from "../utils/handlers";
+import { handleCardFormSubmit } from "../utils/handlers";
 
-import Register from "./alltherest/Register";
-import Login from "../components/alltherest/Login";
-//import Main from "./alltherest/Main";
+import Register from "./Register";
+import Login from "../components/Login";
 import Header from "./Header/Header";
 import Main from "./Main/Main";
 import Footer from "./Footer/Footer";
+import InfoTooltip from "./InfoTooltip";
+
 import CurrentUserContext from "../contexts/CurrentUserContext";
 import CardContext from "../contexts/CardContext";
 import AppContext from "../contexts/AppContext";
 
 function App() {
-  const [userData, setUserData] = useState({
-    username: "",
-    email: "",
-  });
-
   const [isLoggedIn, setIsLoggedIn] = useState(false);
+  const [currentUser, setCurrentUser] = useState(null);
+  const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
+  const [isRegistrationSuccess, setIsRegistrationSuccess] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  const handleRegistration = ({ email, password }) => {
+  // MANIPULADOR DE REGISTRO
+  const onRegister = ({ email, password }) => {
     auth
       .register({ email, password })
       .then((data) => {
         console.group("Debug de Registro");
-        console.log("Token:", data.token);
         console.log("Dados completos:", data);
         console.groupEnd();
 
+        setIsRegistrationSuccess(true);
         setIsLoggedIn(false);
         navigate("/login");
       })
       .catch((error) => {
+        setIsRegistrationSuccess(false);
         console.error("Erro ao registrar o usuário: ", error);
-      });
-  };
-
-  const handleLogin = ({ email, password }) => {
-    auth
-      .authorize(email, password) // 1. Remove a desestruturação aqui
-      .then((token) => {
-        // 2. Recebe diretamente o token
-        console.group("Debug de Login");
-        console.log("Token recebido:", token);
-        setToken(token);
-        setIsLoggedIn(true);
-
-        // 3. Adiciona chamada para obter dados do usuário
-        api
-          .getUserInfo(token) // Supondo que existe esta função na sua API
-          .then((userData) => {
-            console.log("Dados do usuário:", userData);
-            setUserData(userData); // 5. Seta os dados reais do usuário
-            navigate(location.state?.from || "/main");
-          })
-          .catch((userError) => {
-            console.error("Erro ao obter dados do usuário:", userError);
-          });
-        console.groupEnd();
       })
-      .catch((error) => {
-        console.error("Erro ao fazer login: ", error);
+      .finally(() => {
+        setIsInfoTooltipOpen(true);
       });
   };
 
-  useEffect(() => {
-    const jwt = getToken();
-    if (!jwt) {
-      return;
+  // MANIPULADOR DE LOGIN
+  const onLogin = async ({ email, password }) => {
+    try {
+      const jwtToken = await auth.authorize(email, password); // Chama a função authorize com email e senha
+      if (!jwtToken) throw new Error("Token não recebido"); // Verifica se o token foi recebido
+
+      const userData = await auth.getUserInfo(jwtToken); // Chama a função getUserInfo com o token
+      console.log("Dados do usuário:", userData); // Exibe os dados do usuário
+
+      // 4. Debug
+      console.group("Debug de Login");
+      console.log("Token recebido:", jwtToken);
+      console.log("Dados do usuário:", userData);
+      console.groupEnd();
+
+      setToken(jwtToken);
+      setIsLoggedIn(true);
+      setCurrentUser({
+        email: userData.data.email,
+        _id: userData.data._id,
+      });
+
+      navigate(location.state?.from || "/"); // 6. Navega para a rota de origem ou para a raiz
+    } catch (error) {
+      console.error("Erro ao fazer login: ", error); // 7. Exibe erro
+      removeToken();
+      setIsLoggedIn(false);
     }
-    api
-      .getUserInfo(jwt)
-      .then((data) => {
-        setUserData(data);
-        setIsLoggedIn(true);
-      })
-      .catch((error) => {
-        console.error("Erro ao buscar dados do usuário: ", error);
-      });
+  };
+
+  //------------- RELOAD LOGIN - DADOS DO USUARIO -------------//
+  useEffect(() => {
+    const token = getToken();
+    if (token) {
+      auth
+        .getUserInfo(token)
+        .then((userData) => {
+          setCurrentUser({
+            email: userData.data.email,
+            id: userData.data._id,
+          });
+          setIsLoggedIn(true);
+        })
+        .catch(() => {
+          removeToken();
+        });
+    }
   }, []);
 
   //------------- CARDS -------------//
-  //carregar dados dos cards
-  useEffect(() => {
+  /*useEffect(() => {
     api
       .getInitialCards()
       .then((data) => setCards(Array.isArray(data) ? data : []))
       .catch((err) => console.error("Erro ao buscar os cartões:", err));
-  }, []);
-
-  //------------- PROFILE -------------//
-  //carregar dados do usuário
-  useEffect(() => {
-    (async () => {
-      await api.getUserInfo().then((data) => {
-        setCurrentUser(data);
-      });
-    })();
-  }, []);
+  }, []);*/
 
   //------------- RENDER -------------//
   return (
     <AppContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
-      <CurrentUserContext.Provider
-        value={(userData, handleProfileFormSubmit, handleAvatarFormSubmit)}
-      >
+      <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
         <CardContext.Provider
           value={{
             handleCardFormSubmit,
@@ -138,7 +128,7 @@ function App() {
                   path="*"
                   element={
                     isLoggedIn ? (
-                      <Navigate to="/main" replace />
+                      <Navigate to="/" replace />
                     ) : (
                       <Navigate to="/login" replace />
                     )
@@ -146,7 +136,7 @@ function App() {
                 />
                 {/* ROTAS PRIVADAS */}
                 <Route
-                  path="/main"
+                  path="/"
                   element={
                     <ProtectedRoute>
                       <Main setIsLoggedIn={setIsLoggedIn} />
@@ -159,7 +149,7 @@ function App() {
                   element={
                     <ProtectedRoute isLoggedIn={isLoggedIn} anonymous>
                       <div className="login">
-                        <Login handleLogin={handleLogin} />
+                        <Login onLogin={onLogin} />
                       </div>
                     </ProtectedRoute>
                   }
@@ -168,7 +158,7 @@ function App() {
                   path="/register"
                   element={
                     <ProtectedRoute isLoggedIn={isLoggedIn} anonymous>
-                      <Register handleRegistration={handleRegistration} />
+                      <Register onRegister={onRegister} />
                     </ProtectedRoute>
                   }
                 />
@@ -176,6 +166,11 @@ function App() {
             </main>
             <Footer />
           </div>
+          <InfoTooltip
+            isOpen={isInfoTooltipOpen}
+            onClose={() => setIsInfoTooltipOpen(false)}
+            isSuccess={isRegistrationSuccess}
+          />
         </CardContext.Provider>
       </CurrentUserContext.Provider>
     </AppContext.Provider>

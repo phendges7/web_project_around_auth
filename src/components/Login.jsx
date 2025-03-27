@@ -2,13 +2,14 @@ import { Link } from "react-router-dom";
 import { useState } from "react";
 import { Eye, EyeOff } from "react-feather";
 
-const Login = ({ handleLogin }) => {
+const Login = ({ onLogin }) => {
   const [data, setData] = useState({
     email: "",
     password: "",
   });
 
   const [showPassword, setShowPassword] = useState(false);
+  const [error, setError] = useState(null);
 
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -16,11 +17,25 @@ const Login = ({ handleLogin }) => {
       ...prevData,
       [name]: value,
     }));
+    if (error) {
+      setError(null);
+    }
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
-    handleLogin(data);
+
+    if (!data.email || !data.password) {
+      setError("Preencha todos os campos.");
+      return;
+    }
+    setError(null);
+    try {
+      await onLogin(data);
+    } catch (err) {
+      setError("Erro ao fazer login. Verifique suas credenciais.");
+    } finally {
+    }
   };
 
   return (
@@ -29,10 +44,10 @@ const Login = ({ handleLogin }) => {
       <form className="login__form" onSubmit={handleSubmit}>
         <label htmlFor="email"></label>
         <input
-          id="username"
+          id="email"
           required
           name="email"
-          type="text"
+          type="email"
           placeholder="E-mail"
           value={data.email}
           onChange={handleChange}

@@ -1,4 +1,4 @@
-import Popup from "../Popup/Popup";
+import { Popup } from "../Popup/Popup";
 
 export default function ImagePopup({ card, onClose }) {
   return (

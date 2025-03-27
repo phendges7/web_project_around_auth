@@ -1,8 +1,5 @@
 import { renderCard } from "../page/index.js";
-import { UserInfo } from "../components/alltherest/UserInfo.js";
 import * as api from "../utils/api";
-
-const userInfo = new UserInfo(".profile__name", ".profile__description");
 
 // FUNCTION - MANIPULAR SUBMIT DE PERFIL
 export function handleProfileFormSubmit(params) {

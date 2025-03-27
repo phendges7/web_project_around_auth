@@ -1,13 +1,28 @@
 const TOKEN_KEY = "jwt";
 
 export const setToken = (token) => {
-  localStorage.setItem(TOKEN_KEY, token);
+  try {
+    if (!token) throw new Error("Token inválido");
+    localStorage.setItem(TOKEN_KEY, JSON.stringify(token));
+  } catch (error) {
+    console.error("Erro ao salvar token:", error);
+  }
 };
 
 export const getToken = () => {
-  return localStorage.getItem(TOKEN_KEY);
+  try {
+    const token = JSON.parse(localStorage.getItem(TOKEN_KEY));
+    if (!token) throw new Error("Token inválido");
+    return token;
+  } catch (error) {
+    return null;
+  }
 };
 
 export const removeToken = () => {
-  localStorage.removeItem(TOKEN_KEY);
+  try {
+    localStorage.removeItem(TOKEN_KEY);
+  } catch (error) {
+    console.error("Erro ao remover token:", error);
+  }
 };

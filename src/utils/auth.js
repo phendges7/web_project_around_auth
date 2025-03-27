@@ -1,17 +1,15 @@
 import { handleResponse } from "./api";
 
 const BASE_URL = "https://se-register-api.en.tripleten-services.com/v1";
-const DEFAULT_HEADERS = {
-  Accept: "application/json",
-  "Content-Type": "application/json",
-};
 
 // FUNCTION - REGISTRA USUARIO
 export const register = async (email, password) => {
   try {
     const response = await fetch(`${BASE_URL}/signup`, {
       method: "POST",
-      headers: DEFAULT_HEADERS,
+      headers: {
+        "Content-Type": "application/json",
+      },
       body: JSON.stringify(email, password),
     });
 
@@ -21,7 +19,7 @@ export const register = async (email, password) => {
     }
 
     const data = await response.json();
-    console.log("Registro bem-sucedido:", data);
+    console.log("Dados do usuário:", data);
     return data;
   } catch (error) {
     console.error("Erro detalhado:", {
@@ -33,30 +31,69 @@ export const register = async (email, password) => {
 };
 
 // FUNCTION - AUTORIZA USUARIO - LOGIN
-export const authorize = (email, password) => {
-  const payload = { email, password };
-  console.log("Payload sendo enviado:", payload); // Debug crucial
-
-  return fetch(`${BASE_URL}/signin`, {
-    method: "POST",
-    headers: {
-      "Content-Type": "application/json",
-    },
-    body: JSON.stringify(payload),
-  }).then((res) => {
-    console.log("Resposta da API:", res); // Debug da resposta
-    return handleResponse(res);
-  });
+export const authorize = async (email, password) => {
+  const payload = {
+    email,
+    password,
+  };
+  try {
+    const response = await fetch(`${BASE_URL}/signin`, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
+    });
+    const data = await handleResponse(response);
+    return data.token;
+  } catch (error) {
+    console.error("Erro detalhado:", {
+      endpoint: "/signin",
+      error: error.message,
+    });
+    throw error;
+  }
 };
 
 // FUNCTION - VALIDA TOKEN
 export const validateToken = async (token) => {
-  const response = await fetch(`${BASE_URL}/users/me`, {
-    method: "GET",
-    headers: {
-      "Content-Type": "application/json",
-      Authorization: `Bearer ${token}`,
-    },
-  });
-  return await response.json();
+  try {
+    const response = await fetch(`${BASE_URL}/users/me`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+    return await handleResponse(response);
+  } catch (error) {
+    console.error("Erro detalhado:", {
+      endpoint: "/users/me",
+      error: error.message,
+    });
+    throw error;
+  }
+};
+
+// FUNCTION - obter dados do usuario
+export const getUserInfo = async (token) => {
+  try {
+    const response = await fetch(`${BASE_URL}/users/me`, {
+      method: "GET",
+      headers: {
+        "Content-Type": "application/json",
+        Authorization: `Bearer ${token}`,
+      },
+    });
+
+    if (response.status === 403) {
+      const errorData = await response.json();
+      console.error("Erro de autorização:", errorData);
+      throw new Error(`${errorData.message || "Sem mensagem"}`);
+    }
+    return await handleResponse(response);
+  } catch (error) {
+    console.error("Erro ao buscar dados do usuário:", error);
+    throw error;
+  }
 };

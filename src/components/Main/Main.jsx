@@ -2,7 +2,7 @@ import { useContext } from "react";
 
 import editProfileButton from "../../images/editButton.svg";
 import avatar from "../../images/avatarDefault.jpg";
-import Popup from "./components/Popup/Popup";
+import Popup from "./components/Popup/Popup.jsx";
 import Card from "./components/Card/Card";
 import ImagePopup from "./components/ImagePopup/ImagePopup";
 import { Popups } from "./components/constants.jsx";
