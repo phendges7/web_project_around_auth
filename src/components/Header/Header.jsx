@@ -7,7 +7,7 @@ import { removeToken } from "../../utils/token";
 
 const Header = () => {
   const { isLoggedIn, setIsLoggedIn } = useContext(AppContext);
-  const { currentUser } = useContext(CurrentUserContext);
+  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
 
   const location = useLocation();
   const navigate = useNavigate();
@@ -15,6 +15,7 @@ const Header = () => {
   const onSignout = () => {
     removeToken();
     setIsLoggedIn(false);
+    setCurrentUser(null);
     navigate("/login");
   };
 

@@ -14,8 +14,10 @@ export const register = async (email, password) => {
     });
 
     if (!response.ok) {
-      const errorData = await response.json();
-      throw new Error(errorData.message || "Erro ao registrar");
+      if (response.status === 400) {
+        let errorMessage = "Um ou mais campos foram preenchidos incorretamente";
+      }
+      throw new Error(errorMessage);
     }
 
     const data = await response.json();

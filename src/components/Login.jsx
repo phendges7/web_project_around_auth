@@ -78,7 +78,7 @@ const Login = ({ onLogin }) => {
 
       <div className="login__signup">
         <p>Ainda não é membro?</p>
-        <Link to="/register" className="signup__link">
+        <Link to="/signup" className="signup__link">
           Inscreva-se aqui
         </Link>
       </div>

@@ -1,18 +1,15 @@
-.login {
-  display: flex;
-  justify-content: center;
-}
-
 .login__container {
-  border: 2px solid #02ff00;
-  padding: 36px;
-  width: 100%;
-  max-width: 360px;
-  align-self: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: flex-start;
+  min-height: 63vh;
+  width: 358px;
+  margin: 0 auto;
 }
 
 .login__welcome {
-  margin-bottom: 54px;
+  margin-top: 0;
+  padding-top: 60px;
   font-family: "Inter";
   font-style: normal;
   font-weight: 900;
@@ -21,23 +18,20 @@
   text-align: center;
 }
 
-.login__error {
-  color: #ff0000;
-}
-
 .login__form {
   display: flex;
   flex-direction: column;
-  justify-content: center;
+  flex-grow: 1;
+  justify-content: space-between;
   margin: 0 auto;
   width: 80%;
   margin-top: 12px;
 }
 
 .login__form input {
-  background-color: black;
-  border-bottom: 2px solid #cccccc;
-  margin-bottom: 0;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #ccc;
   color: #fff;
 }
 
@@ -48,12 +42,12 @@
 }
 
 .login__button-container {
-  display: flex;
-  justify-content: center;
+  margin-top: auto;
+  padding-bottom: 20px;
 }
 
 .login__button {
-  margin-top: 20px;
+  margin-bottom: 15px;
   width: 100%;
   height: 50px;
   font-family: "Inter";
@@ -65,6 +59,11 @@
   background-color: #fff;
   color: #000;
   cursor: pointer;
+  transition: background 0.3s;
+}
+
+.login__button:hover {
+  opacity: 0.8;
 }
 
 .login__signup {

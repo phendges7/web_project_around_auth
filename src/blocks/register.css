@@ -1,28 +1,21 @@
-.register {
-  display: flex;
-  justify-content: center;
-}
-
 .register__container {
-  border: 2px solid #02ff00;
-  padding: 36px;
-  width: 100%;
-  max-width: 360px;
-  align-self: center;
+  display: flex;
+  flex-direction: column;
+  justify-content: space-between;
+  min-height: calc(100vh - 300px);
+  width: 358px;
+  margin: 0 auto;
 }
 
 .register__welcome {
-  margin-bottom: 54px;
+  margin-top: 0;
+  padding-top: 60px;
   font-family: "Inter";
   font-style: normal;
   font-weight: 900;
   font-size: 24px;
   line-height: 29px;
   text-align: center;
-}
-
-.register__error {
-  color: #02ff00;
 }
 
 .register__form {
@@ -35,8 +28,9 @@
 }
 
 .register__form input {
-  background-color: #000000;
-  border: 2px solid #ccc;
+  background: transparent;
+  border: none;
+  border-bottom: 2px solid #ccc;
   color: #fff;
 }
 
@@ -51,7 +45,8 @@
 }
 
 .register__button {
-  margin-top: 20px;
+  margin-top: 215px;
+  margin-bottom: 20px;
   width: 100%;
   height: 50px;
   font-family: "Inter";

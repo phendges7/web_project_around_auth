@@ -1,11 +1,19 @@
 import { Link } from "react-router-dom";
-import { useState } from "react";
+import { useEffect, useState } from "react";
 
 const Register = ({ onRegister }) => {
   const [data, setData] = useState({
     email: "",
     password: "",
   });
+
+  // Limpa INPUTS quando o componente é montado
+  useEffect(() => {
+    setData({
+      email: "",
+      password: "",
+    });
+  }, []);
 
   const handleChange = (e) => {
     const { name, value } = e.target;

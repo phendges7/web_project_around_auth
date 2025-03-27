@@ -130,7 +130,7 @@ function App() {
                     isLoggedIn ? (
                       <Navigate to="/" replace />
                     ) : (
-                      <Navigate to="/login" replace />
+                      <Navigate to="/signin" replace />
                     )
                   }
                 />
@@ -145,22 +145,16 @@ function App() {
                 />
                 {/* ROTAS PUBLICAS */}
                 <Route
-                  path="/login"
+                  path="/signin"
                   element={
-                    <ProtectedRoute isLoggedIn={isLoggedIn} anonymous>
-                      <div className="login">
-                        <Login onLogin={onLogin} />
-                      </div>
-                    </ProtectedRoute>
+                    <div className="login">
+                      <Login onLogin={onLogin} />
+                    </div>
                   }
                 />
                 <Route
-                  path="/register"
-                  element={
-                    <ProtectedRoute isLoggedIn={isLoggedIn} anonymous>
-                      <Register onRegister={onRegister} />
-                    </ProtectedRoute>
-                  }
+                  path="/signup"
+                  element={<Register onRegister={onRegister} />}
                 />
               </Routes>
             </main>

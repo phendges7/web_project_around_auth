@@ -5,12 +5,12 @@ import failIcon from "../images/failIcon.png";
 export default function InfoTooltip({ isOpen, onClose, isSuccess }) {
   const messages = {
     success: {
-      text: "Cadastro realizado com sucesso!",
+      text: "Cadastro realizado\ncom sucesso!",
       icon: successIcon,
       altText: "Ícone de sucesso",
     },
     error: {
-      text: "Erro ao realizar cadastro",
+      text: "Ops, algo deu errado!\nPor favor, tente novamente.",
       icon: failIcon,
       altText: "Ícone de erro",
     },
@@ -19,17 +19,15 @@ export default function InfoTooltip({ isOpen, onClose, isSuccess }) {
   const { text, icon, altText } = isSuccess ? messages.success : messages.error;
 
   return (
-    <Popup isOpen={isOpen} onClose={onClose} title={null}>
-      <div className="popup__container">
-        <img src={icon} alt={altText} className="popup__infotootip-icon" />
-        <h2
-          className={`popup__infotooltip-message ${
-            !isSuccess && "infotooltip__message--error"
-          }`}
-        >
-          {text}
-        </h2>
-      </div>
+    <Popup isOpen={isOpen} onClose={onClose} title={InfoTooltip}>
+      <img src={icon} alt={altText} className="popup__infotooltip-icon" />
+      <h2
+        className={`popup__infotooltip-message ${
+          !isSuccess && "infotooltip__message--error"
+        }`}
+      >
+        {text}
+      </h2>
     </Popup>
   );
 }
