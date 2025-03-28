@@ -2,23 +2,23 @@ import { useState, useContext } from "react";
 import CurrentUserContext from "../../../../../contexts/CurrentUserContext.js";
 
 export default function EditProfile() {
-  const userContext = useContext(CurrentUserContext);
-  const { currentUser, handleUpdateUser } = userContext;
+  const { currentUser, handleUpdateUser } = useContext(CurrentUserContext);
+  const [name, setName] = useState(currentUser?.name || "");
+  const [description, setDescription] = useState(currentUser?.about || "");
+  const [isSubmitting, setIsSubmitting] = useState(false);
 
-  const [name, setName] = useState(currentUser?.name);
-  const [description, setDescription] = useState(currentUser?.about);
+  const handleSubmit = async (event) => {
+    event.preventDefault();
+    setIsSubmitting(true);
 
-  const handleNameChange = (evt) => {
-    setName(evt.target.value);
-  };
-
-  const handleDescriptionChange = (evt) => {
-    setDescription(evt.target.value);
-  };
-
-  const handleSubmit = (evt) => {
-    evt.preventDefault();
-    handleUpdateUser({ name, about: description });
+    try {
+      await handleUpdateUser({ name, about: description });
+      onClose();
+    } catch (error) {
+      console.error("Erro ao atualizar perfil:", error);
+    } finally {
+      setIsSubmitting(false);
+    }
   };
 
   return (
@@ -39,7 +39,7 @@ export default function EditProfile() {
           maxLength="40"
           required
           value={name}
-          onChange={handleNameChange}
+          onChange={(event) => setName(event.target.value)}
         />
         <span className="popup__input-error" data-input="firstInput"></span>
       </label>
@@ -54,13 +54,17 @@ export default function EditProfile() {
           maxLength="200"
           required
           value={description}
-          onChange={handleDescriptionChange}
+          onChange={(event) => setDescription(event.target.value)}
         />
         <span className="popup__input-error" data-input="secondInput"></span>
       </label>
 
-      <button type="submit" className="popup__submit-button">
-        SALVAR
+      <button
+        type="submit"
+        className="popup__submit-button"
+        disabled={isSubmitting}
+      >
+        {isSubmitting ? "Salvando..." : "Salvar"}
       </button>
     </form>
   );

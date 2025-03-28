@@ -1,18 +1,13 @@
 import { useContext, useEffect, useState } from "react";
 
 import { fetchUserAndCards } from "../../utils/api.js";
-
-// POPUPS
 import { Popups } from "./components/constants.jsx";
-import Popup from "./components/Popup/Popup.jsx";
 
-//
+import Popup from "./components/Popup/Popup.jsx";
 import editProfileButton from "../../images/editButton.svg";
 import avatar from "../../images/avatarDefault.jpg";
-
 import Card from "./components/Card/Card";
 import ImagePopup from "./components/Popup/components/ImagePopup.jsx";
-
 import CurrentUserContext from "../../contexts/CurrentUserContext.js";
 
 export default function Main({
@@ -22,7 +17,7 @@ export default function Main({
   onCardLike,
   onCardDelete,
 }) {
-  // Contexto do usuário atual
+  // Contextos atuais
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
   const [isLoading, setIsLoading] = useState(true);
   const [cards, setCards] = useState([]);
@@ -72,6 +67,7 @@ export default function Main({
 
   return (
     <>
+      {/*------------- PROFILE -------------*/}
       <div className="profile">
         <div className="profile__picture-container">
           <img
@@ -81,7 +77,7 @@ export default function Main({
           />
           <div
             className="profile__overlay"
-            onClick={() => onOpenPopup(Popups.editAvatarPopup)}
+            onClick={() => onOpenPopup("editAvatarPopup")}
           ></div>
         </div>
         <div className="profile__info-wrapper">
@@ -91,7 +87,7 @@ export default function Main({
               src={editProfileButton}
               alt="Editar Perfil"
               className="profile__edit-button"
-              onClick={() => onOpenPopup(Popups.editProfilePopup)}
+              onClick={() => onOpenPopup("editProfilePopup")}
             />
           </div>
           <p className="profile__description">{currentUser?.about || ""}</p>
@@ -100,9 +96,11 @@ export default function Main({
           aria-label="Add card"
           className="profile__add-place-button"
           type="button"
-          onClick={() => onOpenPopup(Popups.newCardPopup)}
+          onClick={() => onOpenPopup("newCardPopup")}
         ></button>
       </div>
+
+      {/*------------- POPUP -------------*/}
       {popup && (
         <Popup
           onClose={onClosePopup}
@@ -112,6 +110,8 @@ export default function Main({
           {popup.children}
         </Popup>
       )}
+
+      {/*------------- CARDS -------------*/}
       <div className="card-grid">
         {cards.map((card) => (
           <Card

@@ -1,44 +1,33 @@
 import * as api from "../api";
+import { handleError } from "./errorHandlers";
 
-export function handleProfileFormSubmit({ formData, setCurrentUser }) {
-  const submitButton = document.querySelector(
-    "#popupProfile .popup__submit-button"
-  );
-  submitButton.textContent = "Salvando...";
-
-  return api
-    .updateUserInfo({
-      name: formData.firstInput,
-      about: formData.secondInput,
-    })
-    .then((updatedUserData) => {
-      setCurrentUser((prev) => ({
-        ...prev,
-        name: updatedUserData.name,
-        about: updatedUserData.about,
-      }));
-      return updatedUserData;
-    })
-    .finally(() => {
-      submitButton.textContent = "SALVAR";
-    });
+// FUNCTION - manipula dados do form de PERFIL
+export async function handleProfileFormSubmit({ name, about, setCurrentUser }) {
+  try {
+    const updatedUser = await api.updateUserInfo({ name, about });
+    setCurrentUser((prev) => ({
+      ...prev,
+      name: updatedUser.name,
+      about: updatedUser.about,
+    }));
+    return updatedUser;
+  } catch (error) {
+    handleError(error);
+    throw error;
+  }
 }
 
-export function handleAvatarFormSubmit({ formData, setCurrentUser }) {
-  const submitButton = document.querySelector(
-    "#popupAvatar .popup__submit-button"
-  );
-  submitButton.textContent = "Salvando...";
-
-  return api
-    .updateAvatar(formData.firstInput)
-    .then(() => {
-      setCurrentUser((prev) => ({
-        ...prev,
-        avatar: formData.firstInput,
-      }));
-    })
-    .finally(() => {
-      submitButton.textContent = "SALVAR";
-    });
+// FUNCTION - manipula dados do form de AVATAR
+export async function handleAvatarFormSubmit({ avatarUrl, setCurrentUser }) {
+  try {
+    const updatedUser = await api.updateAvatar({ avatarUrl });
+    setCurrentUser((prev) => ({
+      ...prev,
+      avatar: updatedUser.avatar,
+    }));
+    return updatedUser;
+  } catch (error) {
+    handleError(error);
+    throw error;
+  }
 }

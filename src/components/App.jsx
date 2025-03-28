@@ -31,6 +31,7 @@ import Header from "./Header";
 import Main from "./Main/Main";
 import Footer from "./Footer";
 import InfoTooltip from "./Main/components/Popup/components/InfoTooltip";
+import Popup from "./Main/components/Popup/Popup";
 
 // Contexts
 import CurrentUserContext from "../contexts/CurrentUserContext";
@@ -191,6 +192,7 @@ function App() {
   // FUNCTION - ABRIR POPUP
   const onOpenPopup = (popupType) => {
     if (Popups[popupType]) {
+      // Verifica se o tipo de popup existe
       handleOpenPopup(setPopup, Popups[popupType]);
     } else {
       console.error(`Tipo de popup desconhecido: ${popupType}`);
@@ -222,11 +224,11 @@ function App() {
             handleCardDelete: onCardDelete,
           }}
         >
-          <div className="overlay"></div>
           <div className="page">
             <Header />
             <main className="content">
               <Routes>
+                {/* REDIRECIONAMENTO DE ROTAS */}
                 <Route
                   path="*"
                   element={
@@ -238,15 +240,23 @@ function App() {
                   }
                 />
                 {/* ROTA PRIVADA */}
+                {/*------------- MAIN -------------*/}
                 <Route
                   path="/"
                   element={
                     <ProtectedRoute>
-                      <Main setIsLoggedIn={setIsLoggedIn} />
+                      <Main
+                        onOpenPopup={onOpenPopup}
+                        onClosePopup={onClosePopup}
+                        popup={popup}
+                        onCardLike={onCardLike}
+                        onCardDelete={onCardDelete}
+                      />
                     </ProtectedRoute>
                   }
                 />
                 {/* ROTA PUBLICA */}
+                {/*------------- SIGNIN -------------*/}
                 <Route
                   path="/signin"
                   element={
@@ -255,6 +265,7 @@ function App() {
                     </div>
                   }
                 />
+                {/*------------- SIGNUP -------------*/}
                 <Route
                   path="/signup"
                   element={<Register onRegister={onRegister} />}
@@ -263,6 +274,15 @@ function App() {
             </main>
             <Footer />
           </div>
+          {/*------------- POPUP -------------*/}
+          <Popup
+            isOpen={!!popup}
+            onClose={onClosePopup}
+            title={popup?.title || ""}
+          >
+            {popup?.children}
+          </Popup>
+          {/*------------- INFO TOOLTIP -------------*/}
           <InfoTooltip
             isOpen={isInfoTooltipOpen}
             onClose={() => setIsInfoTooltipOpen(false)}
