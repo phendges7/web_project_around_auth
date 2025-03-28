@@ -58,7 +58,6 @@ export const getInitialCards = () => {
 
 // FUNCTION - atualizar dados do usuario
 export const updateUserInfo = ({ name, about }) => {
-  console.log("Nome:", name);
   return fetch(`${BASE_URL}/users/me`, {
     method: "PATCH",
     headers: DEFAULT_HEADERS,
@@ -70,8 +69,6 @@ export const updateUserInfo = ({ name, about }) => {
 
 // FUNCTION - atualizar avatar do usuario
 export const updateAvatar = (avatar) => {
-  console.log("Avatar:", avatar);
-
   return fetch(`${BASE_URL}/users/me/avatar`, {
     method: "PATCH",
     headers: DEFAULT_HEADERS,

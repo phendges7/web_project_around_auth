@@ -57,6 +57,7 @@ function App() {
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [isRegistrationSuccess, setIsRegistrationSuccess] = useState(false);
   const [popup, setPopup] = useState(null);
+  const [cards, setCards] = useState([]); // Estado de cards adicionado
 
   const navigate = useNavigate();
   const location = useLocation();
@@ -79,7 +80,7 @@ function App() {
           removeToken(); // Remove token se validacao falha
         });
     }
-  }, []);
+  }, [location.state?.from, navigate]);
 
   // FUNCTION - REGISTRO
   const onRegister = async ({ email, password }) => {
@@ -87,7 +88,7 @@ function App() {
       await auth.register({ email, password });
       setIsRegistrationSuccess(true);
       navigate("/signin");
-    } catch (error) {
+    } catch {
       setIsRegistrationSuccess(false);
     } finally {
       setIsInfoTooltipOpen(true);
@@ -158,6 +159,7 @@ function App() {
         name,
         link,
       });
+      setCards((prevCards) => [newCard, ...prevCards]); // Atualizar estado de cards
       onClosePopup();
       return newCard;
     } catch (error) {
@@ -180,6 +182,7 @@ function App() {
   const onCardDelete = async (card) => {
     try {
       await handleCardDelete(card, setCards);
+      setCards((prevCards) => prevCards.filter((c) => c._id !== card._id)); // Atualizar estado de cards
       onClosePopup();
     } catch (error) {
       handleError(error);
@@ -247,6 +250,8 @@ function App() {
                         popup={popup}
                         onCardLike={onCardLike}
                         onCardDelete={onCardDelete}
+                        cards={cards} // Passando cards como propriedade
+                        setCards={setCards} // Passando setCards como propriedade
                       />
                     </ProtectedRoute>
                   }

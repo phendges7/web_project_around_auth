@@ -32,9 +32,8 @@ const Login = ({ onLogin }) => {
     setError(null);
     try {
       await onLogin(data);
-    } catch (err) {
+    } catch {
       setError("Erro ao fazer login. Verifique suas credenciais.");
-    } finally {
     }
   };
 

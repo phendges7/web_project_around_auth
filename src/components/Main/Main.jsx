@@ -10,12 +10,17 @@ import ImagePopup from "./components/Popup/components/ImagePopup.jsx";
 import CurrentUserContext from "../../contexts/CurrentUserContext.js";
 import CardContext from "../../contexts/CardContext.js";
 
-export default function Main({ onOpenPopup, onClosePopup, popup }) {
+export default function Main({
+  onOpenPopup,
+  onClosePopup,
+  popup,
+  cards,
+  setCards,
+}) {
   // Contextos atuais
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
   const { handleCardLike, handleCardDelete } = useContext(CardContext);
   const [isLoading, setIsLoading] = useState(true);
-  const [cards, setCards] = useState([]);
 
   // Carregar dados do usuário
   useEffect(() => {
@@ -45,9 +50,8 @@ export default function Main({ onOpenPopup, onClosePopup, popup }) {
           : [];
 
         setCards(processedCards);
-      } catch (error) {
-        console.error("Erro ao carregar dados iniciais:", error);
-        setError(error.message);
+      } catch {
+        console.error("Erro ao carregar dados iniciais:", Error);
       } finally {
         setIsLoading(false);
       }
