@@ -1,11 +1,21 @@
 import { Popup } from "./Popup.js";
-import { enableValidation } from "./FormValidator.js";
-import { Section } from "./Section.js";
+import { enableValidation } from "../../../../utils/FormValidator.js";
 
 export class PopupWithForm extends Popup {
   constructor(popupSelector, handleSubmit, cardSection) {
     super(popupSelector);
+
+    // Adiciona verificação de existência do elemento
+    if (!this._popup) {
+      throw new Error(`Elemento ${popupSelector} não encontrado no DOM`);
+    }
+
     this._form = this._popup.querySelector(".popup__wrapper");
+
+    if (!this._form) {
+      throw new Error("Formulário não encontrado no popup");
+    }
+
     this._inputElements = Array.from(
       this._form.querySelectorAll(".popup__input")
     );

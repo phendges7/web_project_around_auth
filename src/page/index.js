@@ -1,111 +1,102 @@
 import { Section } from "../components/Section.js";
-//import { PopupWithForm } from "../components/PopupWithForm.js";
-//import { PopupWithImage } from "../components/PopupWithImage.js";
-//import { PopupWithConfirmation } from "../components/PopupWithConfirmation.js";
-//import { UserInfo } from "../components/UserInfo.js";
+//import { PopupWithForm } from "../components/Main/components/Popup/PopupWithForm.js";
+import { PopupWithImage } from "../components/Main/components/Popup/PopupWithImage.js";
+import { PopupWithConfirmation } from "../components/Main/components/Popup/PopupWithConfirmation.js";
+
 import { Card } from "../components/Card.js";
 
-import * as api from "../utils/api";
+import { SELECTORS } from "../utils/config.js";
+import * as api from "../utils/api.js";
+import { validateToken } from "../utils/auth.js";
 
-import { handleError } from "../utils/handlers.js";
+import {
+  handleProfileFormSubmit,
+  handleCardFormSubmit,
+  handleDeleteCard,
+  handleAvatarFormSubmit,
+  handleError,
+} from "../utils/handlers.js";
 
-//CONTAINERS UTEIS
-const pageContainer = document.querySelector(".page");
-const cardSectionContainer = document.querySelector(".card-grid");
-
-// Cria nova secao - secao de cards
+// INSTANCIA CARD SECTION
 const cardSection = new Section(
   {
-    items: [],
-    renderer: (data) => renderCard(data, cardSection), // Passando a instância correta
+    renderer: (data) => createCard(data),
   },
-  cardSectionContainer
+  SELECTORS.cardContainer
 );
 
-// FUNCTION - Renderiza card
-export const renderCard = (data, cardSection) => {
+/* INSTANCIA POPUPS
+const popups = {
+  profile: new PopupWithForm(
+    SELECTORS.profilePopup,
+    handleProfileFormSubmit,
+    cardSection
+  ),
+  avatar: new PopupWithForm(
+    SELECTORS.avatarPopup,
+    handleAvatarFormSubmit,
+    cardSection
+  ),
+  card: new PopupWithForm(
+    SELECTORS.cardPopup,
+    handleCardFormSubmit,
+    cardSection
+  ),
+  deleteCard: new PopupWithConfirmation(
+    SELECTORS.deleteCardPopup,
+    handleDeleteCard,
+    cardSection
+  ),
+  image: new PopupWithImage(SELECTORS.imagePopup),
+};*/
+
+// FUNCTION - CRIA NOVO CARD
+export function createCard(data) {
   const card = new Card(
-    data.name,
-    data.link,
-    data._id,
-    data.isLiked,
-    "#cardTemplate",
-    handleCardClick,
-    handleDeleteClick
+    data,
+    SELECTORS.cardTemplate,
+    (name, link) => popups.image.open(name, link),
+    (event, cardId) => popups.deleteCard.open(event, cardId)
   );
-  const cardElement = card.generateCard();
+  return card.generateCard();
+}
 
-  cardSection.addItem(cardElement);
-};
+// FUNCTION - POPULA DADOS INICIAIS
+async function loadInitialData() {
+  try {
+    const cardData = await api.getInitialCards();
+    cardSection.renderItems(cardData);
+  } catch (error) {
+    const errorMessage = handleError(error);
+    alert(errorMessage);
+  }
+}
 
-/*GARANTE PAGINA ESTAR DEVIDAMENTE CARREGADA
+/* FUNCTION - CONFIGURA EVENT LISTENERS
+function setupEventListeners() {
+  document
+    .querySelector(SELECTORS.profileEditButton)
+    .addEventListener("click", () => popups.profile.open());
+  document
+    .querySelector(SELECTORS.profileEditAvatarButton)
+    .addEventListener("click", () => popups.avatar.open());
+  document
+    .querySelector(SELECTORS.cardAddButton)
+    .addEventListener("click", () => popups.card.open());
+
+  Object.values(popups).forEach((popup) => popup.setEventListeners());
+}*/
+
+//loadInitialData();
+//setupEventListeners();
+
+// FUNCTION - INICIALIZA APP
+function initializeApp() {
+  //setupEventListeners();
+  loadInitialData();
+}
+
+// Inicia aplicação quando DOM estiver carregado
 document.addEventListener("DOMContentLoaded", () => {
-  loadPageData();
+  initializeApp();
 });
-
-// INICIA APLICACAO
-
-/***********************************
-// Instancia popup para editar PERFIL
-const popupProfileForm = new PopupWithForm(
-  "#popupProfile",
-  handleProfileFormSubmit
-);
-popupProfileForm.setEventListeners();
-
-// Instancia popup para EDITAR AVATAR
-const popupAvatarForm = new PopupWithForm(
-  "#popupAvatar",
-  handleAvatarFormSubmit
-);
-popupAvatarForm.setEventListeners();
-
-// Instancia popup para ADICIONAR CARD
-const popupCardForm = new PopupWithForm(
-  "#popupCard",
-  handleCardFormSubmit,
-  cardSection
-);
-popupCardForm.setEventListeners();
-
-//Instancia popup para DELETAR CARD
-const popupDeleteCard = new PopupWithConfirmation(
-  "#popupDeleteCard",
-  handleDeleteCard
-);
-popupDeleteCard.setEventListeners();
-
-// Instancia popup de IMAGEM EXPANDIDA
-const popupImage = new PopupWithImage(".popupImage");
-popupImage.setEventListeners();
-
-/***********************************
-//CARDS
-// Manipula clique no card
-export const handleCardClick = (name, link) => {
-  popupImage.open(link, name);
-};
-
-// Manipula click na lixeira
-export const handleDeleteClick = (event, cardId) => {
-  popupDeleteCard.open(event, cardId);
-};
-
-/***********************************
-//EVENT LISTENERS PARA POPUPS
-const editProfileButton = document.querySelector(".profile__edit-button");
-editProfileButton.addEventListener("click", () => {
-  popupProfileForm.open();
-});
-
-const addCardButton = document.querySelector(".profile__add-place-button");
-addCardButton.addEventListener("click", () => {
-  popupCardForm.open();
-});
-
-const editAvatarButton = document.querySelector(".profile__picture-container");
-editAvatarButton.addEventListener("click", () => {
-  popupAvatarForm.open();
-});
-
-/**********************************/

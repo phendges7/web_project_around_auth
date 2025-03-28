@@ -1,3 +1,4 @@
+import { useEffect, useState } from "react";
 import {
   Routes,
   Route,
@@ -5,11 +6,10 @@ import {
   useNavigate,
   useLocation,
 } from "react-router-dom";
-import { useEffect, useState } from "react";
-import * as auth from "../utils/auth";
-import { setToken, getToken, removeToken } from "../utils/token";
 import ProtectedRoute from "./ProtectedRoute";
 
+import * as auth from "../utils/auth";
+import { setToken, getToken, removeToken } from "../utils/token";
 import { handleCardFormSubmit } from "../utils/handlers";
 
 import Register from "./Register";
@@ -17,52 +17,42 @@ import Login from "../components/Login";
 import Header from "./Header";
 import Main from "./Main/Main";
 import Footer from "./Footer";
-import InfoTooltip from "./InfoTooltip";
+import InfoTooltip from "./Main/components/Popup/components/InfoTooltip";
 
 import CurrentUserContext from "../contexts/CurrentUserContext";
 import CardContext from "../contexts/CardContext";
 import AppContext from "../contexts/AppContext";
 
 function App() {
-  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [currentUser, setCurrentUser] = useState(null);
+  const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [isRegistrationSuccess, setIsRegistrationSuccess] = useState(false);
   const navigate = useNavigate();
   const location = useLocation();
 
-  // MANIPULADOR DE REGISTRO
-  const onRegister = ({ email, password }) => {
-    auth
-      .register({ email, password })
-      .then((data) => {
-        console.group("Debug de Registro");
-        console.log("Dados completos:", data);
-        console.groupEnd();
-
-        setIsRegistrationSuccess(true);
-        setIsLoggedIn(false);
-        navigate("/login");
-      })
-      .catch((error) => {
-        setIsRegistrationSuccess(false);
-        console.error("Erro ao registrar o usuário: ", error);
-      })
-      .finally(() => {
-        setIsInfoTooltipOpen(true);
-      });
+  // FUNCTION - REGISTRO
+  const onRegister = async ({ email, password }) => {
+    try {
+      await auth.register({ email, password });
+      setIsRegistrationSuccess(true);
+      navigate("/signin");
+    } catch (error) {
+      setIsRegistrationSuccess(false);
+    } finally {
+      setIsInfoTooltipOpen(true);
+    }
   };
 
-  // MANIPULADOR DE LOGIN
+  // FUNCTION - LOGIN
   const onLogin = async ({ email, password }) => {
     try {
-      const jwtToken = await auth.authorize(email, password); // Chama a função authorize com email e senha
-      if (!jwtToken) throw new Error("Token não recebido"); // Verifica se o token foi recebido
+      const jwtToken = await auth.authorize(email, password);
+      if (!jwtToken) throw new Error("Token não recebido");
 
-      const userData = await auth.getUserInfo(jwtToken); // Chama a função getUserInfo com o token
-      console.log("Dados do usuário:", userData); // Exibe os dados do usuário
+      const userData = await auth.getUserInfo(jwtToken);
+      console.log("Dados do usuário:", userData);
 
-      // 4. Debug
       console.group("Debug de Login");
       console.log("Token recebido:", jwtToken);
       console.log("Dados do usuário:", userData);
@@ -75,15 +65,15 @@ function App() {
         _id: userData.data._id,
       });
 
-      navigate(location.state?.from || "/"); // 6. Navega para a rota de origem ou para a raiz
+      navigate(location.state?.from || "/");
     } catch (error) {
-      console.error("Erro ao fazer login: ", error); // 7. Exibe erro
+      console.error("Erro ao fazer login: ", error);
       removeToken();
       setIsLoggedIn(false);
     }
   };
 
-  //------------- RELOAD LOGIN - DADOS DO USUARIO -------------//
+  // FUNCTION - VALIDA TOKEN
   useEffect(() => {
     const token = getToken();
     if (token) {
@@ -95,23 +85,14 @@ function App() {
             id: userData.data._id,
           });
           setIsLoggedIn(true);
-          navigate(location.state?.from || "/"); // Redireciona para a página anterior ou para a raiz
+          navigate(location.state?.from || "/");
         })
         .catch(() => {
-          removeToken();
+          removeToken(); // Remove token se validacao falha
         });
     }
   }, []);
 
-  //------------- CARDS -------------//
-  /*useEffect(() => {
-    api
-      .getInitialCards()
-      .then((data) => setCards(Array.isArray(data) ? data : []))
-      .catch((err) => console.error("Erro ao buscar os cartões:", err));
-  }, []);*/
-
-  //------------- RENDER -------------//
   return (
     <AppContext.Provider value={{ isLoggedIn, setIsLoggedIn }}>
       <CurrentUserContext.Provider value={{ currentUser, setCurrentUser }}>
@@ -135,7 +116,7 @@ function App() {
                     )
                   }
                 />
-                {/* ROTAS PRIVADAS */}
+                {/* ROTA PRIVADA */}
                 <Route
                   path="/"
                   element={
@@ -144,7 +125,7 @@ function App() {
                     </ProtectedRoute>
                   }
                 />
-                {/* ROTAS PUBLICAS */}
+                {/* ROTA PUBLICA */}
                 <Route
                   path="/signin"
                   element={

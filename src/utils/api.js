@@ -37,6 +37,15 @@ export const handleError = (err) => {
   }
 };
 
+// FUNCTION - obter dados do usuario
+export const getUserInfo = () => {
+  return fetch(`${BASE_URL}/users/me`, {
+    method: "GET",
+    headers: DEFAULT_HEADERS,
+  })
+    .then(handleResponse)
+    .catch(handleError);
+};
 // FUNCTION - obter dados dos cards
 export const getInitialCards = () => {
   return fetch(`${BASE_URL}/cards`, {
@@ -98,4 +107,9 @@ export const deleteCard = (cardId) => {
   })
     .then(handleResponse)
     .catch(handleError);
+};
+
+// FUNCTION - obter dados do usuario e cards
+export const fetchUserAndCards = () => {
+  return Promise.all([getUserInfo(), getInitialCards()]);
 };

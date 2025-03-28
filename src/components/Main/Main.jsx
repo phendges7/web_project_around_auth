@@ -1,10 +1,12 @@
-import { useContext } from "react";
+import { useContext, useEffect, useState } from "react";
+
+import { getUserInfo } from "../../utils/api.js";
 
 import editProfileButton from "../../images/editButton.svg";
 import avatar from "../../images/avatarDefault.jpg";
 import Popup from "./components/Popup/Popup.jsx";
 import Card from "./components/Card/Card";
-import ImagePopup from "./components/ImagePopup/ImagePopup";
+import ImagePopup from "./components/Popup/components/ImagePopup.jsx";
 import { Popups } from "./components/constants.jsx";
 import CurrentUserContext from "../../contexts/CurrentUserContext.js";
 
@@ -17,7 +19,27 @@ export default function Main({
   onCardDelete,
 }) {
   //carregar dados do usuário
-  const { currentUser } = useContext(CurrentUserContext);
+  const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+  const [isLoading, setIsLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchUserData = async () => {
+      try {
+        const userData = await getUserInfo();
+        setCurrentUser(userData);
+      } catch (error) {
+        console.error("Erro ao obter dados do usuário:", error);
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchUserData();
+  }, []);
+
+  if (isLoading) {
+    return <div className="loading">Carregando...</div>;
+  }
 
   return (
     <>

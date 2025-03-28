@@ -1,6 +1,6 @@
-import EditAvatar from "./Popup/components/EditAvatar/EditAvatar";
-import EditProfile from "./Popup/components/EditProfile/EditProfile";
-import NewCard from "./Popup/components/NewCard/NewCard";
+import EditAvatar from "./Popup/components/EditAvatar";
+import EditProfile from "./Popup/components/EditProfile";
+import NewCard from "./Popup/components/NewCard";
 
 export const Popups = {
   editAvatarPopup: {

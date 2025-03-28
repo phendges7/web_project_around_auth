@@ -1,4 +1,4 @@
-import { renderCard } from "../page/index.js";
+import { createCard } from "../page/index.js";
 import * as api from "../utils/api";
 
 // FUNCTION - MANIPULAR SUBMIT DE PERFIL
@@ -49,7 +49,7 @@ export function handleCardFormSubmit(params) {
   api
     .addCard({ name: cardName, link: cardLink })
     .then((newCardData) => {
-      renderCard(newCardData, cardSection);
+      createCard(newCardData, cardSection);
 
       submitButton.textContent = "CRIAR";
       submitButton.disabled = false;

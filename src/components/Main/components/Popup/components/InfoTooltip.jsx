@@ -1,6 +1,6 @@
-import Popup from "./Main/components/Popup/Popup.jsx";
-import successIcon from "../images/successIcon.png";
-import failIcon from "../images/failIcon.png";
+import Popup from "../Popup.jsx";
+import successIcon from "../../../../../images/successIcon.png";
+import failIcon from "../../../../../images/failIcon.png";
 import { useEffect } from "react";
 
 export default function InfoTooltip({ isOpen, onClose, isSuccess }) {
