@@ -24,7 +24,13 @@ import CardContext from "../contexts/CardContext";
 import AppContext from "../contexts/AppContext";
 
 function App() {
-  const [currentUser, setCurrentUser] = useState(null);
+  const [currentUser, setCurrentUser] = useState({
+    email: "",
+    name: "",
+    about: "",
+    avatar: "",
+    _id: "",
+  });
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [isRegistrationSuccess, setIsRegistrationSuccess] = useState(false);
@@ -51,12 +57,6 @@ function App() {
       if (!jwtToken) throw new Error("Token não recebido");
 
       const userData = await auth.getUserInfo(jwtToken);
-      console.log("Dados do usuário:", userData);
-
-      console.group("Debug de Login");
-      console.log("Token recebido:", jwtToken);
-      console.log("Dados do usuário:", userData);
-      console.groupEnd();
 
       setToken(jwtToken);
       setIsLoggedIn(true);

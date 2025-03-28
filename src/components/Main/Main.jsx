@@ -1,6 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 
-import { getUserInfo } from "../../utils/api.js";
+import { fetchUserAndCards } from "../../utils/api.js";
 
 import editProfileButton from "../../images/editButton.svg";
 import avatar from "../../images/avatarDefault.jpg";
@@ -18,15 +18,30 @@ export default function Main({
   onCardLike,
   onCardDelete,
 }) {
-  //carregar dados do usuário
+  // Contexto do usuário atual
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
   const [isLoading, setIsLoading] = useState(true);
+  const [cards, setCards] = useState([]);
 
+  // Carregar dados do usuário
   useEffect(() => {
-    const fetchUserData = async () => {
+    const fetchInitialData = async () => {
       try {
-        const userData = await getUserInfo();
-        setCurrentUser(userData);
+        const { userData, cardsData } = await fetchUserAndCards();
+        setCurrentUser((prevUser) => ({
+          ...prevUser,
+          name: userData.name,
+          about: userData.about,
+          avatar: userData.avatar,
+          _id: userData._id,
+        }));
+
+        setCards(
+          cardsData.map((card) => ({
+            ...card,
+            isLiked: card.likes.some((like) => like._id === currentUser?._id),
+          }))
+        );
       } catch (error) {
         console.error("Erro ao obter dados do usuário:", error);
       } finally {
@@ -34,8 +49,8 @@ export default function Main({
       }
     };
 
-    fetchUserData();
-  }, []);
+    fetchInitialData();
+  }, [currentUser?._id]);
 
   if (isLoading) {
     return <div className="loading">Carregando...</div>;
@@ -84,22 +99,21 @@ export default function Main({
         </Popup>
       )}
       <div className="card-grid">
-        {Array.isArray(cards) &&
-          cards.map((card) => (
-            <Card
-              key={card._id}
-              card={card}
-              isLiked={card.isLiked}
-              onCardLike={onCardLike}
-              onCardDelete={onCardDelete}
-              onImageClick={() =>
-                onOpenPopup({
-                  title: "",
-                  children: <ImagePopup card={card} onClose={onClosePopup} />,
-                })
-              }
-            />
-          ))}
+        {cards.map((card) => (
+          <Card
+            key={card._id}
+            card={card}
+            isLiked={card.isLiked}
+            onCardLike={onCardLike}
+            onCardDelete={onCardDelete}
+            onImageClick={() =>
+              onOpenPopup({
+                title: "",
+                children: <ImagePopup card={card} onClose={onClosePopup} />,
+              })
+            }
+          />
+        ))}
       </div>
     </>
   );
