@@ -1,16 +1,26 @@
 import { useRef, useContext, useState } from "react";
 import CurrentUserContext from "../../../../../contexts/CurrentUserContext.js";
 
-export default function EditAvatar( onClose ) {
-  const {currentUser, handleUpdateAvatar} = useContext(CurrentUserContext)
+export default function EditAvatar() {
+  const { currentUser, handleUpdateAvatar } = useContext(CurrentUserContext);
   const avatarRef = useRef(null);
-  const 
+  const [avatarUrl, setAvatarUrl] = useState(currentUser.avatar);
+  const [isLoading, setIsLoading] = useState(false);
 
-
-  const handleSubmit = (evt) => {
+  const handleSubmit = async (evt) => {
     evt.preventDefault();
+    setIsLoading(true);
+    try {
+      await handleUpdateAvatar(avatarUrl);
+    } catch (error) {
+      console.error("Error updating avatar:", error);
+    } finally {
+      setIsLoading(false);
+    }
+  };
 
-    handleUpdateAvatar(avatarRef.current.value);
+  const handleInputChange = (evt) => {
+    setAvatarUrl(evt.target.value);
   };
 
   return (
@@ -31,12 +41,17 @@ export default function EditAvatar( onClose ) {
           type="url"
           minLength="2"
           maxLength="200"
+          onChange={handleInputChange}
         />
         <span className="popup__input-error" data-input="firstInput"></span>
       </label>
 
-      <button type="submit" className="popup__submit-button">
-        SALVAR
+      <button
+        type="submit"
+        className="popup__submit-button"
+        disabled={isLoading}
+      >
+        {isLoading ? "Salvando..." : "Salvar"}
       </button>
     </form>
   );

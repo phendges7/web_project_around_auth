@@ -16,12 +16,19 @@ export default function Card({
     isLiked ? "active" : ""
   }`;
 
+  // Manipulador do clique no botão de curtir
   function handleLikeClick() {
     onCardLike(card);
   }
 
+  // Manipulador do clique no botão de deletar
   function handleDeleteClick() {
     onCardDelete(card);
+  }
+
+  // Manipulador do clique na imagem do card
+  function handleImageClick() {
+    onImageClick(imageComponent);
   }
 
   return (
@@ -30,7 +37,7 @@ export default function Card({
         className="card__image"
         src={link}
         alt={name}
-        onClick={() => onImageClick(imageComponent)}
+        onClick={handleImageClick}
       />
       <button
         aria-label="DELETE"

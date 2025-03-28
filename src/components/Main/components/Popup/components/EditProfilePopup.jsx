@@ -13,7 +13,6 @@ export default function EditProfile() {
 
     try {
       await handleUpdateUser({ name, about: description });
-      onClose();
     } catch (error) {
       console.error("Erro ao atualizar perfil:", error);
     } finally {

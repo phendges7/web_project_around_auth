@@ -20,7 +20,7 @@ export async function handleProfileFormSubmit({ name, about, setCurrentUser }) {
 // FUNCTION - manipula dados do form de AVATAR
 export async function handleAvatarFormSubmit({ avatarUrl, setCurrentUser }) {
   try {
-    const updatedUser = await api.updateAvatar({ avatarUrl });
+    const updatedUser = await api.updateAvatar(avatarUrl);
     setCurrentUser((prev) => ({
       ...prev,
       avatar: updatedUser.avatar,

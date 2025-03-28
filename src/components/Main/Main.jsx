@@ -1,7 +1,6 @@
 import { useContext, useEffect, useState } from "react";
 
 import { fetchUserAndCards } from "../../utils/api.js";
-import { Popups } from "./components/constants.jsx";
 
 import Popup from "./components/Popup/Popup.jsx";
 import editProfileButton from "../../images/editButton.svg";
@@ -9,16 +8,12 @@ import avatar from "../../images/avatarDefault.jpg";
 import Card from "./components/Card/Card";
 import ImagePopup from "./components/Popup/components/ImagePopup.jsx";
 import CurrentUserContext from "../../contexts/CurrentUserContext.js";
+import CardContext from "../../contexts/CardContext.js";
 
-export default function Main({
-  onOpenPopup,
-  onClosePopup,
-  popup,
-  onCardLike,
-  onCardDelete,
-}) {
+export default function Main({ onOpenPopup, onClosePopup, popup }) {
   // Contextos atuais
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
+  const { handleCardLike, handleCardDelete } = useContext(CardContext);
   const [isLoading, setIsLoading] = useState(true);
   const [cards, setCards] = useState([]);
 
@@ -59,11 +54,42 @@ export default function Main({
     };
 
     fetchInitialData();
-  }, []);
+  }, [setCurrentUser, setCards]);
 
   if (isLoading) {
     return <div className="loading">Carregando...</div>;
   }
+
+  // FUNCTION - LIKE CARD
+  const handleLike = async (card) => {
+    try {
+      await handleCardLike(card);
+      setCards((prevCards) =>
+        prevCards.map((c) =>
+          c._id === card._id ? { ...c, isLiked: !c.isLiked } : c
+        )
+      );
+    } catch (error) {
+      console.error("Erro ao dar like no card:", error);
+    }
+  };
+
+  // FUNCTION - DELETAR CARD
+  const handleDelete = async (card) => {
+    try {
+      await handleCardDelete(card);
+      setCards((prevCards) => prevCards.filter((c) => c._id !== card._id));
+    } catch (error) {
+      console.error("Erro ao deletar card:", error);
+    }
+  };
+
+  // FUNCTION - CRIAR NOVO CARD
+  const handleAddCard = (formData) => {
+    if (formData.newCard) {
+      setCards((prevCards) => [formData.newCard, ...prevCards]);
+    }
+  };
 
   return (
     <>
@@ -96,7 +122,7 @@ export default function Main({
           aria-label="Add card"
           className="profile__add-place-button"
           type="button"
-          onClick={() => onOpenPopup("newCardPopup")}
+          onClick={() => onOpenPopup("addPlacePopup")}
         ></button>
       </div>
 
@@ -118,8 +144,8 @@ export default function Main({
             key={card._id}
             card={card}
             isLiked={card.isLiked}
-            onCardLike={onCardLike}
-            onCardDelete={onCardDelete}
+            onCardLike={handleLike}
+            onCardDelete={handleDelete}
             onImageClick={() =>
               onOpenPopup({
                 title: "",

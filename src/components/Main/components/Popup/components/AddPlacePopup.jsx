@@ -1,22 +1,42 @@
 import { useState, useContext } from "react";
 import CardContext from "../../../../../contexts/CardContext";
 
-export default function NewCard() {
-  const { handleAddPlaceSubmit } = useContext(CardContext);
-
+export default function AddPlacePopup({ onClose, onSubmit }) {
+  const { handleCardFormSubmit } = useContext(CardContext);
   const [placeName, setPlaceName] = useState("");
-  const [placeLink, setPlaceLink] = useState("");
+  const [placeImageUrl, setPlaceImageUrl] = useState("");
+  const [isLoading, setIsLoading] = useState(false);
 
-  const handleSubmit = (evt) => {
+  const handleSubmit = async (evt) => {
     evt.preventDefault();
+    setIsLoading(true);
 
-    handleAddPlaceSubmit({
-      name: placeName,
-      link: placeLink,
-    });
+    try {
+      const newCard = await handleCardFormSubmit({
+        name: placeName,
+        link: placeImageUrl,
+      });
 
-    setPlaceName("");
-    setPlaceLink("");
+      // Adiciona o novo card à lista de cards
+      onSubmit({
+        name: placeName,
+        link: placeImageUrl,
+        newCard,
+      });
+
+      // Limpa os campos após o envio
+      setPlaceName("");
+      setPlaceImageUrl("");
+
+      // Fecha o popup
+      if (onClose) {
+        onClose();
+      }
+    } catch (error) {
+      console.error("Erro adicionar card:", error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -31,7 +51,6 @@ export default function NewCard() {
           type="text"
           minLength="2"
           maxLength="30"
-          value={placeName}
           onChange={(evt) => setPlaceName(evt.target.value)}
         />
         <span className="popup__input-error" data-input="firstInput"></span>
@@ -44,13 +63,16 @@ export default function NewCard() {
           placeholder="URL da imagem"
           required
           type="url"
-          value={placeLink}
-          onChange={(evt) => setPlaceLink(evt.target.value)}
+          onChange={(evt) => setPlaceImageUrl(evt.target.value)}
         />
         <span className="popup__input-error" data-input="secondInput"></span>
       </label>
-      <button type="submit" className="popup__submit-button">
-        SALVAR
+      <button
+        type="submit"
+        className="popup__submit-button"
+        disabled={isLoading}
+      >
+        {isLoading ? "Salvando..." : "Salvar"}
       </button>
     </form>
   );

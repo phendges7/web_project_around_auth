@@ -1,6 +1,6 @@
-import EditAvatar from "./Popup/components/EditAvatar";
-import EditProfile from "./Popup/components/EditProfile";
-import NewCard from "./Popup/components/NewCard";
+import EditAvatar from "./Popup/components/EditAvatarPopup";
+import EditProfile from "./Popup/components/EditProfilePopup";
+import AddPlace from "./Popup/components/AddPlacePopup";
 import ImagePopup from "./Popup/components/ImagePopup";
 
 export const Popups = {
@@ -14,14 +14,14 @@ export const Popups = {
     title: "Editar perfil",
     children: <EditProfile />,
   },
-  newCardPopup: {
-    type: "newCardPopup",
+  addPlacePopup: {
+    type: "addPlacePopup",
     title: "Novo local",
-    children: <NewCard />,
+    children: <AddPlace />,
   },
   imagePopup: {
     type: "imagePopup",
     title: "",
-    children: null,
+    children: <ImagePopup />,
   },
 };

@@ -56,7 +56,6 @@ function App() {
   const [isLoggedIn, setIsLoggedIn] = useState(false);
   const [isInfoTooltipOpen, setIsInfoTooltipOpen] = useState(false);
   const [isRegistrationSuccess, setIsRegistrationSuccess] = useState(false);
-  const [cards, setCards] = useState([]);
   const [popup, setPopup] = useState(null);
 
   const navigate = useNavigate();
@@ -138,7 +137,7 @@ function App() {
   };
 
   // FUNCTION - ATUALIZAR AVATAR
-  const onUpdateAvatar = async ({ avatarUrl }) => {
+  const onUpdateAvatar = async (avatarUrl) => {
     try {
       const updatedAvatar = await handleAvatarFormSubmit({
         avatarUrl,
@@ -158,7 +157,6 @@ function App() {
       const newCard = await handleCardFormSubmit({
         name,
         link,
-        setCards,
       });
       onClosePopup();
       return newCard;
@@ -217,9 +215,7 @@ function App() {
       >
         <CardContext.Provider
           value={{
-            cards,
-            setCards,
-            handleAddPlaceSubmit: onAddCard,
+            handleCardFormSubmit: onAddCard,
             handleCardLike: onCardLike,
             handleCardDelete: onCardDelete,
           }}
