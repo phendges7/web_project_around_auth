@@ -7,15 +7,8 @@ import { Card } from "../components/Card.js";
 
 import { SELECTORS } from "../utils/config.js";
 import * as api from "../utils/api.js";
-import { validateToken } from "../utils/auth.js";
 
-import {
-  handleProfileFormSubmit,
-  handleCardFormSubmit,
-  handleDeleteCard,
-  handleAvatarFormSubmit,
-  handleError,
-} from "../utils/handlers.js";
+import { handleError } from "../utils/handlers/errorHandlers.js";
 
 // INSTANCIA CARD SECTION
 const cardSection = new Section(

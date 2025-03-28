@@ -1,5 +1,4 @@
 import * as api from "../api";
-import { handleError } from "./errorHandler";
 
 export function handleCardFormSubmit({ formData, setCards }) {
   const submitButton = document.querySelector(

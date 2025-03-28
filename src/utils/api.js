@@ -110,6 +110,15 @@ export const deleteCard = (cardId) => {
 };
 
 // FUNCTION - obter dados do usuario e cards
-export const fetchUserAndCards = () => {
-  return Promise.all([getUserInfo(), getInitialCards()]);
+export const fetchUserAndCards = async () => {
+  try {
+    const [userData, cardsData] = await Promise.all([
+      getUserInfo(),
+      getInitialCards(),
+    ]);
+    return [userData, cardsData || []]; // Garante que cardsData seja array
+  } catch (error) {
+    console.error("Error in fetchUserAndCards:", error);
+    throw error;
+  }
 };
