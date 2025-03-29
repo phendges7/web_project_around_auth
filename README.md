@@ -1,12 +1,103 @@
-# React + Vite
+# Web Project Around Auth
 
-This template provides a minimal setup to get React working in Vite with HMR and some ESLint rules.
+Este projeto é um exemplo de aplicação web que utiliza autenticação e autorização. Foi desenvolvido utilizando diversas tecnologias modernas do ecossistema JavaScript.
 
-Currently, two official plugins are available:
+## Tecnologias Utilizadas
 
-- [@vitejs/plugin-react](https://github.com/vitejs/vite-plugin-react/blob/main/packages/plugin-react/README.md) uses [Babel](https://babeljs.io/) for Fast Refresh
-- [@vitejs/plugin-react-swc](https://github.com/vitejs/vite-plugin-react-swc) uses [SWC](https://swc.rs/) for Fast Refresh
+- **React**: Biblioteca JavaScript para construção de interfaces de usuário.
+- **Vite**: Ferramenta de build e desenvolvimento rápida para projetos front-end modernos.
+- **React Router**: Biblioteca para roteamento em aplicações React.
+- **ESLint**: Ferramenta para análise de código estático, utilizada para garantir a qualidade do código.
+- **CSS Modules**: Para modularização e escopo de estilos CSS.
+- **Axios**: Cliente HTTP baseado em Promises para realizar requisições ao backend.
+- **Context API**: Para gerenciamento de estado global na aplicação.
 
-## Expanding the ESLint configuration
+## Estrutura de Arquivos
 
-If you are developing a production application, we recommend using TypeScript and enable type-aware lint rules. Check out the [TS template](https://github.com/vitejs/vite/tree/main/packages/create-vite/template-react-ts) to integrate TypeScript and [`typescript-eslint`](https://typescript-eslint.io) in your project.
+A estrutura de arquivos do projeto é organizada da seguinte forma:
+
+```
+web_project_around_auth/
+├── public/                     # Arquivos públicos
+├── src/                        # Código fonte da aplicação
+│   ├── assets/                 # Assets como imagens e fontes
+│   ├── components/             # Componentes React
+│   │   ├── App.jsx             # Componente principal da aplicação
+│   │   ├── Header.jsx          # Componente de cabeçalho
+│   │   ├── Footer.jsx          # Componente de rodapé
+│   │   ├── Main/               # Componentes principais
+│   │   │   ├── Main.jsx        # Componente principal
+│   │   │   ├── components/     # Subcomponentes do Main
+│   │   │   │   ├── Card/       # Componentes de cartão
+│   │   │   │   ├── Popup/      # Componentes de popup
+│   ├── contexts/               # Contextos React para gerenciamento de estado
+│   ├── utils/                  # Funções utilitárias
+│   ├── styles/                 # Arquivos de estilo CSS
+│   ├── index.jsx               # Ponto de entrada da aplicação
+│   ├── App.jsx                 # Componente principal da aplicação
+├── .eslintrc.js                # Configuração do ESLint
+├── vite.config.js              # Configuração do Vite
+├── package.json                # Dependências e scripts do projeto
+└── README.md                   # Documentação do projeto
+```
+
+## Como Clonar e Executar o Projeto
+
+Siga os passos abaixo para clonar e executar o projeto na sua máquina local.
+
+### Pré-requisitos
+
+- **Node.js**: Certifique-se de ter o Node.js instalado. Você pode baixá-lo [aqui](https://nodejs.org/).
+- **npm**: O npm é instalado junto com o Node.js. Alternativamente, você pode usar o [Yarn](https://yarnpkg.com/).
+
+### Passos
+
+1. **Clone o repositório**:
+
+   ```bash
+   git clone https://github.com/phendges7/web_project_around_auth.git
+   ```
+
+2. **Navegue até o diretório do projeto**:
+
+   ```bash
+   cd web_project_around_auth
+   ```
+
+3. **Instale as dependências**:
+
+   ```bash
+   npm install
+   ```
+
+4. **Execute o servidor de desenvolvimento**:
+
+   ```bash
+   npm run dev
+   ```
+
+5. **Abra o navegador**:
+   - Acesse `http://localhost:3000` para ver a aplicação em execução.
+
+### Scripts Disponíveis
+
+- `npm run dev`: Inicia o servidor de desenvolvimento.
+- `npm run build`: Cria uma versão de produção do projeto.
+- `npm run serve`: Serve a versão de produção criada pelo build.
+- `npm run lint`: Executa o ESLint para verificar problemas no código.
+
+## Demonstração
+
+A aplicação pode ser visualizada em funcionamento através do seguinte link: [Demonstração Online](https://screenrec.com/share/6EqpQwLPtb).
+
+## Autor
+
+Pedro Henrique
+
+## Meta
+
+Este projeto demonstra o uso do ReactJS com foco em popups e criação de cartões e com uso de APIs para autenticar e criar usuarios, seguindo boas práticas de desenvolvimento web, design pixel-perfect e gestão avançada de estado com hooks e contextos.
+
+## Licença
+
+Este projeto é de uso livre para fins educacionais e pessoais.

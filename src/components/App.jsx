@@ -128,8 +128,10 @@ function App() {
       navigate(location.state?.from || "/");
     } catch (error) {
       console.error("Erro ao fazer login: ", error);
+      setIsLoginTooltipOpen(true);
       removeToken();
       setIsLoggedIn(false);
+      throw error;
     }
   };
 

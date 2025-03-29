@@ -33,7 +33,12 @@ export default function InfoTooltip({ isOpen, onClose, isSuccess }) {
   }, [isOpen, isSuccess, onClose]);
 
   return (
-    <Popup isOpen={isOpen} onClose={onClose} title={InfoTooltip}>
+    <Popup
+      isOpen={isOpen}
+      onClose={onClose}
+      title=""
+      contentClassName="popup__content"
+    >
       <img src={icon} alt={altText} className="popup__infotooltip-icon" />
       <h2
         className={`popup__infotooltip-message ${
