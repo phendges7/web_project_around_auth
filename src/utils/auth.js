@@ -14,8 +14,9 @@ export const register = async (email, password) => {
     });
 
     if (!response.ok) {
+      let errorMessage = "Erro desconhecido"; // Valor padrão
       if (response.status === 400) {
-        let errorMessage = "Um ou mais campos foram preenchidos incorretamente";
+        errorMessage = "Um ou mais campos foram preenchidos incorretamente";
       }
       throw new Error(errorMessage);
     }

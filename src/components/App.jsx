@@ -85,7 +85,7 @@ function App() {
 
           setIsLoggedIn(true);
           navigate(location.state?.from || "/");
-        } catch (error) {
+        } catch {
           removeToken();
         }
       };
@@ -127,7 +127,6 @@ function App() {
       setIsLoggedIn(true);
       navigate(location.state?.from || "/");
     } catch (error) {
-      debugger;
       console.error("Erro ao fazer login: ", error);
       removeToken();
       setIsLoggedIn(false);
@@ -142,7 +141,6 @@ function App() {
         about,
         setCurrentUser,
       });
-      debugger;
       onClosePopup();
       return updatedUser;
     } catch (error) {

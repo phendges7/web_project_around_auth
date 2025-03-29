@@ -21,7 +21,6 @@ export default function Main({
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
   const { handleCardLike, handleCardDelete } = useContext(CardContext);
   const [isLoading, setIsLoading] = useState(true);
-  const [imagePopupCard, setImagePopupCard] = useState(null);
 
   // Carregar dados do usuário
   useEffect(() => {

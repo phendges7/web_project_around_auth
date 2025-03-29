@@ -14,7 +14,7 @@ export const getToken = () => {
     const token = JSON.parse(localStorage.getItem(TOKEN_KEY));
     if (!token) throw new Error("Token inválido");
     return token;
-  } catch (error) {
+  } catch {
     return null;
   }
 };

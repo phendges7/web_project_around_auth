@@ -1,6 +1,12 @@
 import Popup from "./Popup";
 
-export default function PopupWithConfirmation({ isOpen, onClose, onSubmit }) {
+export default function PopupWithConfirmation({
+  isOpen,
+  onClose,
+  onSubmit,
+  children,
+  title,
+}) {
   const handleSubmit = (event) => {
     event.preventDefault();
     onSubmit();

@@ -7,11 +7,6 @@ export default function Card({
 }) {
   const { name, link } = card;
 
-  const imageComponent = {
-    title: name,
-    children: <img src={link} alt={name} className="popup__image" />,
-  };
-
   const cardLikeButtonClassName = `card__like-button ${
     isLiked ? "active" : ""
   }`;
