@@ -40,6 +40,7 @@ import AppContext from "../contexts/AppContext";
 
 // Utils
 import * as auth from "../utils/auth";
+import * as api from "../utils/api";
 import { setToken, getToken, removeToken } from "../utils/token";
 import { Popups } from "./Main/components/constants";
 
@@ -64,29 +65,32 @@ function App() {
 
   // FUNCTION - VALIDA TOKEN
   useEffect(() => {
-    const loadUserData = async (token) => {
-      try {
-        const authData = await auth.getUserInfo(token);
-        const [mainData] = await fetchUserAndCards();
-
-        setCurrentUser({
-          email: authData.data?.email || "",
-          name: mainData?.name || "",
-          about: mainData?.about || "",
-          avatar: mainData?.avatar || "",
-          _id: authData.data?._id || "",
-        });
-
-        setIsLoggedIn(true);
-        navigate(location.state?.from || "/");
-      } catch (error) {
-        throw error;
-      }
-    };
-
     const token = getToken();
     if (token) {
-      loadUserData(token);
+      const loadData = async () => {
+        try {
+          // 1. Valida token com auth API
+          const authData = await auth.getUserInfo(token);
+
+          // 2. Carrega dados completos do usuário
+          const userData = await api.getUserInfo();
+
+          setCurrentUser({
+            email: authData?.data.email,
+            _id: authData.data?._id || userData?._id || "",
+            name: userData?.name,
+            about: userData?.about,
+            avatar: userData?.avatar,
+          });
+
+          setIsLoggedIn(true);
+          navigate(location.state?.from || "/");
+        } catch (error) {
+          removeToken();
+        }
+      };
+
+      loadData();
     }
   }, [location.state?.from, navigate]);
 
@@ -110,7 +114,7 @@ function App() {
       if (!jwtToken) throw new Error("Token não recebido");
 
       const userData = await auth.getUserInfo(jwtToken);
-      debugger;
+
       setCurrentUser({
         email,
         name: userData.name,
@@ -123,6 +127,7 @@ function App() {
       setIsLoggedIn(true);
       navigate(location.state?.from || "/");
     } catch (error) {
+      debugger;
       console.error("Erro ao fazer login: ", error);
       removeToken();
       setIsLoggedIn(false);

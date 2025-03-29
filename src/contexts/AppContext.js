@@ -2,7 +2,7 @@ import { createContext } from "react";
 
 const AppContext = createContext({
   isLoggedIn: false,
-  setIsLoggedIn: () => {}, // Função vazia como valor padrão
+  setIsLoggedIn: () => {},
 });
 
 export default AppContext;

@@ -28,29 +28,35 @@ export default function Main({
     const fetchInitialData = async () => {
       try {
         const [userData, cardsData] = await fetchUserAndCards();
-
-        if (!userData) {
-          throw new Error("Dados do usuário não encontrados");
-        }
+        console.log("Dados recebidos:", {
+          userData,
+          cardsData,
+          currentUserId: currentUser._id,
+        });
 
         setCurrentUser((prev) => ({
           ...prev,
-          name: userData.name || "",
-          about: userData.about || "",
+          name: userData.name || "USUARIO PADRAO",
+          about: userData.about || "DESCRICAO PADRAO",
           avatar: userData.avatar || avatar,
           _id: userData._id || "",
         }));
-
         // Verifica se cardsData existe e é um array antes de mapear
         const processedCards = Array.isArray(cardsData)
           ? cardsData.map((card) => ({
               ...card,
-              isLiked:
-                card.likes?.some((like) => like._id === userData._id) || false,
+              isLiked: card.isLiked, // Usa diretamente o valor da API
             }))
           : [];
 
         setCards(processedCards);
+        console.log(
+          "Cards processados:",
+          processedCards.map((c) => ({
+            id: c._id,
+            isLiked: c.isLiked,
+          }))
+        );
       } catch {
         console.error("Erro ao carregar dados iniciais:", Error);
       } finally {
@@ -59,7 +65,7 @@ export default function Main({
     };
 
     fetchInitialData();
-  }, [setCurrentUser, setCards]);
+  }, [setCurrentUser, setCards, currentUser._id]);
 
   if (isLoading) {
     return <div className="loading">Carregando...</div>;
@@ -68,14 +74,19 @@ export default function Main({
   // FUNCTION - LIKE CARD
   const handleLike = async (card) => {
     try {
-      await handleCardLike(card);
+      // Atualiza o estado local imediatamente
       setCards((prevCards) =>
         prevCards.map((c) =>
           c._id === card._id ? { ...c, isLiked: !c.isLiked } : c
         )
       );
+
+      // Envia a requisição para a API em segundo plano
+      handleCardLike(card).catch((error) => {
+        console.error("Falha na API (silenciosa):", error);
+      });
     } catch (error) {
-      console.error("Erro ao dar like no card:", error);
+      console.error("Erro inesperado:", error);
     }
   };
 
@@ -88,8 +99,6 @@ export default function Main({
       console.error("Erro ao deletar card:", error);
     }
   };
-
-  console.log("currentUser", currentUser);
 
   return (
     <>

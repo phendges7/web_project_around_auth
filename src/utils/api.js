@@ -91,6 +91,9 @@ export const addCard = ({ name, link }) => {
 
 // FUNCTION - mudar status de like do card
 export const changeLikeCardStatus = (cardId, isLiked) => {
+  debugger;
+  console.log("Card ID:", cardId);
+  console.log("Is Liked:", isLiked);
   return fetch(`${BASE_URL}/cards/${cardId}/likes`, {
     method: isLiked ? "PUT" : "DELETE",
     headers: DEFAULT_HEADERS,
@@ -116,7 +119,7 @@ export const fetchUserAndCards = async () => {
       getUserInfo(),
       getInitialCards(),
     ]);
-    return [userData, cardsData || []]; // Garante que cardsData seja array
+    return [userData, cardsData || []];
   } catch (error) {
     console.error("Error in fetchUserAndCards:", error);
     throw error;
