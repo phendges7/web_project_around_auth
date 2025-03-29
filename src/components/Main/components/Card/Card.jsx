@@ -28,7 +28,7 @@ export default function Card({
 
   // Manipulador do clique na imagem do card
   function handleImageClick() {
-    onImageClick(imageComponent);
+    onImageClick(card);
   }
 
   return (

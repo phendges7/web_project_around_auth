@@ -21,6 +21,7 @@ export default function Main({
   const { currentUser, setCurrentUser } = useContext(CurrentUserContext);
   const { handleCardLike, handleCardDelete } = useContext(CardContext);
   const [isLoading, setIsLoading] = useState(true);
+  const [imagePopupCard, setImagePopupCard] = useState(null);
 
   // Carregar dados do usuário
   useEffect(() => {
@@ -88,12 +89,7 @@ export default function Main({
     }
   };
 
-  // FUNCTION - CRIAR NOVO CARD
-  const handleAddCard = (formData) => {
-    if (formData.newCard) {
-      setCards((prevCards) => [formData.newCard, ...prevCards]);
-    }
-  };
+  console.log("currentUser", currentUser);
 
   return (
     <>
@@ -112,7 +108,7 @@ export default function Main({
         </div>
         <div className="profile__info-wrapper">
           <div className="profile__info">
-            <h1 className="profile__name">{currentUser?.name || "Usuário"}</h1>
+            <h1 className="profile__name">{currentUser?.name}</h1>
             <img
               src={editProfileButton}
               alt="Editar Perfil"
@@ -120,7 +116,7 @@ export default function Main({
               onClick={() => onOpenPopup("editProfilePopup")}
             />
           </div>
-          <p className="profile__description">{currentUser?.about || ""}</p>
+          <p className="profile__description">{currentUser?.about}</p>
         </div>
         <button
           aria-label="Add card"
@@ -150,12 +146,7 @@ export default function Main({
             isLiked={card.isLiked}
             onCardLike={handleLike}
             onCardDelete={handleDelete}
-            onImageClick={() =>
-              onOpenPopup({
-                title: "",
-                children: <ImagePopup card={card} onClose={onClosePopup} />,
-              })
-            }
+            onImageClick={() => onOpenPopup("imagePopup", card)}
           />
         ))}
       </div>

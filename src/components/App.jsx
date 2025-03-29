@@ -64,21 +64,29 @@ function App() {
 
   // FUNCTION - VALIDA TOKEN
   useEffect(() => {
+    const loadUserData = async (token) => {
+      try {
+        const authData = await auth.getUserInfo(token);
+        const [mainData] = await fetchUserAndCards();
+
+        setCurrentUser({
+          email: authData.data?.email || "",
+          name: mainData?.name || "",
+          about: mainData?.about || "",
+          avatar: mainData?.avatar || "",
+          _id: authData.data?._id || "",
+        });
+
+        setIsLoggedIn(true);
+        navigate(location.state?.from || "/");
+      } catch (error) {
+        throw error;
+      }
+    };
+
     const token = getToken();
     if (token) {
-      auth
-        .getUserInfo(token)
-        .then((userData) => {
-          setCurrentUser({
-            email: userData.data.email,
-            id: userData.data._id,
-          });
-          setIsLoggedIn(true);
-          navigate(location.state?.from || "/");
-        })
-        .catch(() => {
-          removeToken(); // Remove token se validacao falha
-        });
+      loadUserData(token);
     }
   }, [location.state?.from, navigate]);
 
@@ -102,7 +110,7 @@ function App() {
       if (!jwtToken) throw new Error("Token não recebido");
 
       const userData = await auth.getUserInfo(jwtToken);
-
+      debugger;
       setCurrentUser({
         email,
         name: userData.name,
@@ -129,6 +137,7 @@ function App() {
         about,
         setCurrentUser,
       });
+      debugger;
       onClosePopup();
       return updatedUser;
     } catch (error) {
@@ -191,10 +200,13 @@ function App() {
   };
 
   // FUNCTION - ABRIR POPUP
-  const onOpenPopup = (popupType) => {
+  const onOpenPopup = (popupType, ...args) => {
     if (Popups[popupType]) {
-      // Verifica se o tipo de popup existe
-      handleOpenPopup(setPopup, Popups[popupType]);
+      const popupConfig =
+        typeof Popups[popupType] === "function"
+          ? Popups[popupType](...args)
+          : Popups[popupType];
+      handleOpenPopup(setPopup, popupConfig);
     } else {
       console.error(`Tipo de popup desconhecido: ${popupType}`);
     }
@@ -280,6 +292,7 @@ function App() {
             isOpen={!!popup}
             onClose={onClosePopup}
             title={popup?.title || ""}
+            contentClassName={popup?.contentClassName}
           >
             {popup?.children}
           </Popup>

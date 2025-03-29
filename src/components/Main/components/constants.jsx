@@ -8,20 +8,24 @@ export const Popups = {
     type: "editAvatarPopup",
     title: "Alterar foto de perfil",
     children: <EditAvatar />,
+    contentClassName: "popup__content",
   },
   editProfilePopup: {
     type: "editProfilePopup",
     title: "Editar perfil",
     children: <EditProfile />,
+    contentClassName: "popup__content",
   },
   addPlacePopup: {
     type: "addPlacePopup",
     title: "Novo local",
     children: <AddPlace />,
+    contentClassName: "popup__content",
   },
-  imagePopup: {
+  imagePopup: (card) => ({
     type: "imagePopup",
     title: "",
-    children: <ImagePopup />,
-  },
+    children: <ImagePopup card={card} />,
+    contentClassName: "popup__image-content",
+  }),
 };

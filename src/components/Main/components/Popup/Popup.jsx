@@ -1,4 +1,10 @@
-export default function Popup({ isOpen, onClose, title, children }) {
+export default function Popup({
+  isOpen,
+  onClose,
+  title,
+  children,
+  contentClassName,
+}) {
   if (!isOpen) return null;
 
   return (
@@ -11,7 +17,7 @@ export default function Popup({ isOpen, onClose, title, children }) {
           aria-label="Fechar"
         />
 
-        <div className="popup__content">
+        <div className={contentClassName}>
           {title && <h2 className="popup__title">{title}</h2>}
           {children}
         </div>
