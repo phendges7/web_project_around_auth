@@ -20,21 +20,24 @@ A estrutura de arquivos do projeto é organizada da seguinte forma:
 web_project_around_auth/
 ├── public/                     # Arquivos públicos
 ├── src/                        # Código fonte da aplicação
-│   ├── assets/                 # Assets como imagens e fontes
+│   ├── blocks/                 # Arquivos de estilo CSS
 │   ├── components/             # Componentes React
 │   │   ├── App.jsx             # Componente principal da aplicação
 │   │   ├── Header.jsx          # Componente de cabeçalho
 │   │   ├── Footer.jsx          # Componente de rodapé
+│   │   ├── Login.jsx           # Componente de login
+│   │   ├── ProtectedRoute.jsx  # Componente responsável por proteger rotas
+│   │   ├── Register.jsx        # Componente de registro
+│   │   ├── Section.jsx         # Componente de seção
 │   │   ├── Main/               # Componentes principais
-│   │   │   ├── Main.jsx        # Componente principal
+│   │   │   ├── Main.jsx        # Componente principal renderizado depois do login
 │   │   │   ├── components/     # Subcomponentes do Main
 │   │   │   │   ├── Card/       # Componentes de cartão
-│   │   │   │   ├── Popup/      # Componentes de popup
+│   │   │   │   ├── Popup/      # Componentes de popup - EditAvatar, EditProfile, AddPlace, ImagePopup, InfoTooltip
 │   ├── contexts/               # Contextos React para gerenciamento de estado
+│   ├── images/                 # Imagens utilizadas na aplicação
 │   ├── utils/                  # Funções utilitárias
-│   ├── styles/                 # Arquivos de estilo CSS
-│   ├── index.jsx               # Ponto de entrada da aplicação
-│   ├── App.jsx                 # Componente principal da aplicação
+│   ├── vendor/                 # Arquivos de fontes e normalize
 ├── .eslintrc.js                # Configuração do ESLint
 ├── vite.config.js              # Configuração do Vite
 ├── package.json                # Dependências e scripts do projeto
